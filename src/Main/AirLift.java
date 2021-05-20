@@ -77,7 +77,7 @@ public class AirLift
 	public void startSimulation()
 	{
 		System.out.println("Simulacao iniciada\n\n");
-		
+
 		pilot.start();
 		hostess.start();
 		for (Passenger p : passenger){
