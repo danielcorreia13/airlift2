@@ -8,7 +8,7 @@ public class ClientCom
     /**
      * Communication socket
      */
-    private Socket commSocket = null;
+    private Socket sock = null;
 
     /**
      * Name of the computation system where the server is located
@@ -23,12 +23,12 @@ public class ClientCom
     /**
      *  Input stream of the communication channel
      */
-    private ObjectInputStream in = null;
+    private ObjectInputStream input = null;
 
     /**
      * Output stream of the communication channel
      */
-    private ObjectOutputStream out = null;
+    private ObjectOutputStream output = null;
 
     /**
      *
@@ -59,8 +59,8 @@ public class ClientCom
 
         try
         {
-            commSocket = new Socket();
-            commSocket.connect (serverAddress);
+            sock = new Socket();
+            sock.connect (serverAddress);
         }
         catch (UnknownHostException e)
         {
@@ -112,7 +112,7 @@ public class ClientCom
 
         try
         {
-            out = new ObjectOutputStream (commSocket.getOutputStream ());
+            output = new ObjectOutputStream (sock.getOutputStream ());
         }
         catch (IOException e)
         {
@@ -124,7 +124,7 @@ public class ClientCom
 
         try
         {
-            in = new ObjectInputStream (commSocket.getInputStream ());
+            input = new ObjectInputStream (sock.getInputStream ());
         }
         catch (IOException e)
         {
@@ -136,4 +136,89 @@ public class ClientCom
 
         return (success);
     }
+
+    /**
+     * Client closing method
+     */
+    public void close() {
+
+        // close input data stream
+        try {
+            input.close();
+        } catch (final IOException e) {
+            System.err.printf("%s suffered unknown IO error\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // close output data stream
+        try {
+            output.close();
+        } catch (final IOException e) {
+            System.err.printf("%s suffered unknown IO error\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // close socket
+        try {
+            sock.close();
+        } catch (final IOException e) {
+            System.err.printf("%s suffered unknown IO error\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+    }
+
+    /**
+     * Client data stream read method
+     *
+     * @return serverObject
+     */
+    public Object readObject () {
+        Object serverObject = null;
+
+        try {
+            serverObject = input.readObject();
+        } catch (final InvalidClassException e) {
+            System.err.printf("%s can't deserialize data\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        } catch (final IOException e) {
+            System.err.printf("%s suffered unknown IO error\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        } catch (final ClassNotFoundException e) {
+            System.err.printf("%s wrong data type\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return serverObject;
+    }
+
+    /**
+     * Client data stream write method
+     *
+     * @param clientObject
+     */
+    public void writeObject(final Object clientObject) {
+        try {
+            output.writeObject(clientObject);
+        } catch (final InvalidClassException e) {
+            System.err.printf("%s can't serialize class\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        }  catch (final NotSerializableException e) {
+            System.err.printf("%s non-serializable data type\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        } catch (final IOException e) {
+            System.err.printf("%s suffered unknown IO error\n", Thread.currentThread().getName());
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
 }
+

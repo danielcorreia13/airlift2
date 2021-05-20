@@ -1,5 +1,8 @@
 package Client.stubs;
 
+import Client.common.Message;
+import Client.common.MessageType;
+import Client.communications.ClientCom;
 import Client.entities.Hostess;
 import Client.entities.Passenger;
 import Client.entities.Pilot;
@@ -34,7 +37,6 @@ public class DepartureAirportStub
     /**
      * Keeps track of how many passengers are entering the plane
      */
-
     private int nPassengers;
 
     /**
@@ -45,13 +47,11 @@ public class DepartureAirportStub
     /**
      * Show documents flags
      */
-
     private final boolean[] showDocuments;
 
     /**
      * Allowed to board flags
      */
-
     private final boolean[] canBoard;
 
 
@@ -61,10 +61,10 @@ public class DepartureAirportStub
     /**
      *  Departure Airport instantiation.
      *
-     *    @param repos reference to the general repository
+     *    //@param repos reference to the general repository
      */
-    public DepartureAirportStub( /*GeneralRep repos */)
-    {
+    /* TODO: Verificar melhor o construtor */
+    public DepartureAirportStub( /*GeneralRep repos */) {
         //generalRep = repos;
 
         try {
@@ -90,8 +90,9 @@ public class DepartureAirportStub
      *
      * @return true if the passenger queue is empty
      */
-
-    public boolean empty(){
+    /* TODO : Modificar para comunicar com o servidor */
+    public boolean empty()
+    {
         return passengerQueue.empty();
     }
 
@@ -99,8 +100,9 @@ public class DepartureAirportStub
      *
      * @return the number of passengers that have been checked
      */
-
-    public int getnPassengers() {
+    /* TODO : Modificar para comunicar com o servidor */
+    public int getnPassengers()
+    {
         return nPassengers;
     }
 
@@ -114,8 +116,8 @@ public class DepartureAirportStub
      *
      *
      */
-    public synchronized void checkDocuments()
-    {
+    /* TODO : Analisar melhor como se faz nestes casos com dois whiles */
+    public void checkDocuments() {
         int passId = -1;
 
         try {
@@ -160,19 +162,34 @@ public class DepartureAirportStub
      *
      *
      */
-    public synchronized void waitForNextPassenger()
-    {
-//    	System.out.println("HOSTESS: Checking if queue not empty");
-        ((Hostess) Thread.currentThread()).sethState(Hostess.States.WAIT_FOR_PASSENGER);
-        //generalRep.setHostess(Hostess.States.WAIT_FOR_PASSENGER);
+    public void waitForNextPassenger() {
+        System.out.println("HOSTESS: Waiting for passenger on Queue");
 
-        while (passengerQueue.empty())
+        ClientCom clientCom = new ClientCom("localhost", 4001);
+
+        /* while (passengerQueue.empty()) */
+        while( !clientCom.open() )
         {
-//        	System.out.println("HOSTESS: Waiting for next passenger");
+            try
+            {
+                Thread.sleep(1000);
+            } catch(InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
 
-            try {
-                wait();
-            } catch (InterruptedException ignored) {}
+            Hostess hostess = (Hostess) Thread.currentThread();
+            Message pkt = new Message();
+
+            pkt.setType(MessageType.WAIT_FOR_NEXT_PASSENGER);
+            pkt.setId( hostess.getId() );
+            pkt.setHostState( hostess.gethState() );
+
+            clientCom.writeObject(pkt);
+
+            pkt = (Message) clientCom.readObject();
+            hostess.sethState( pkt.getHostState() );
+            clientCom.close();
+
         }
     }
 
@@ -181,26 +198,34 @@ public class DepartureAirportStub
      *
      *  It is called by the PASSENGER when he is on flight waiting to reach the destination
      *
-     *
      */
-    public synchronized void waitForNextFlight()
-    {
-//        System.out.println("HOSTESS: Waiting for next flight");
-        ((Hostess) Thread.currentThread()).sethState(Hostess.States.WAIT_FOR_NEXT_FLIGHT);
-        //generalRep.setHostess(Hostess.States.WAIT_FOR_NEXT_FLIGHT);
-        while (!readyForBoardig)
+    public void waitForNextFlight() {
+        System.out.println("HOSTESS: Waiting for next flight");
+
+        ClientCom clientCom = new ClientCom("localhost", 4001);
+
+        /* while(!readyForBoarding) */
+        while( !clientCom.open() )                            /* Enquanto a comunicação não estiver estabelecida, aguarda */
         {
             try {
-                wait();
-            } catch (InterruptedException ignored) {}
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
-        readyForBoardig = false;
-        nPassengers = 0;
 
-        ((Hostess) Thread.currentThread()).sethState(Hostess.States.WAIT_FOR_PASSENGER);
+        Message pkt = new Message();
+        Hostess hostess = (Hostess) Thread.currentThread();   /* Caso comunicação estabelecida, busca o thread atual */
 
-        //generalRep.setHostess(Hostess.States.WAIT_FOR_PASSENGER);
+        pkt.setType(MessageType.WAIT_FOR_NEXT_FLIGHT);        /* Tipo de mensagem */
+        pkt.setId( hostess.getId() );                          /* Id da thread */
+        pkt.setHostState(hostess.gethState());                /* Estado atual da thread */
 
+        clientCom.writeObject(pkt);                           /* Escreve o objeto na mensagem */
+
+        pkt = (Message) clientCom.readObject();               /* Recebe uma mensagem do servidor */
+        hostess.sethState( pkt.getHostState() );              /* Atualiza o estado caso tenha mudado */
+        clientCom.close();                                    /* Encerra a comunicação */
     }
 
 
@@ -212,10 +237,9 @@ public class DepartureAirportStub
      *
      *  It is called by the PASSENGER when he is on the queue
      *
-     *
      */
-    public synchronized void waitInQueue()
-    {
+    /* TODO : Analisar melhor como se faz nestes casos com dois whiles */
+    public void waitInQueue() {
         int passId = ((Passenger) Thread.currentThread()).getpId();
         passengers[passId] = (Passenger) Thread.currentThread();
         passengers[passId].setpState(Passenger.States.IN_QUEUE);
@@ -248,7 +272,6 @@ public class DepartureAirportStub
 
             }
         }
-        //nPassengers++;
     }
 
     /**
@@ -258,13 +281,34 @@ public class DepartureAirportStub
      *
      *
      */
-    public synchronized void showDocuments()
-    {
+    public void showDocuments() {
+        ClientCom clientCom = new ClientCom("localhost", 4001);
 
-        int passId = ((Passenger)Thread.currentThread()).getpId();
-        showDocuments[passId] = false;
-//        System.out.println("PASSENGER "+ passId +": Shows documents");
-        notifyAll();
+        while( !clientCom.open() )                            /* Enquanto a comunicação não estiver estabelecida, aguarda */
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        Passenger passenger = (Passenger) Thread.currentThread();
+        System.out.println("PASSENGER "+ passenger.getpId() +": Shows documents");
+
+        /* showDocuments[passId] = false; */
+
+        Message pkt = new Message();
+        pkt.setType(MessageType.SHOW_DOCUMENTS);
+        pkt.setId( passenger.getpId() );                               /* Envia como parametro o ID da Thread Passenger */
+        pkt.setPassengerState( passenger.getpState() );                /* Estado atual da thread */
+
+        clientCom.writeObject(pkt);                                    /* Escreve o objeto na mensagem */
+
+        pkt = (Message) clientCom.readObject();                        /* Recebe uma mensagem do servidor */
+        passenger.setpState( pkt.getPassengerState() );                /* Atualiza o estado caso tenha mudado */
+
+        clientCom.close();
     }
 
 
@@ -276,28 +320,70 @@ public class DepartureAirportStub
      *
      *  It is called by the PILOT when plane is parked on departure and ready for boarding
      *
-     *
      */
-    public synchronized void informPlaneReadyForBoarding()
-    {
-        readyForBoardig = true;
-        //generalRep.nextFlight();
-        //generalRep.writeLog("Boarding Started");
-        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.READY_FOR_BOARDING);
-        //generalRep.setPilotState(Pilot.States.READY_FOR_BOARDING);
+    public void informPlaneReadyForBoarding() {
+        ClientCom clientCom = new ClientCom("localhost", 4001);
 
-//        System.out.println("PILOT: Plane is ready for boarding");
-        notifyAll();
+        /* readyForBoardig = true; */
+
+        while( !clientCom.open() )
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        System.out.println("PILOT: Plane is ready for boarding");
+        Pilot pilot = (Pilot) Thread.currentThread();
+
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.INFORM_PLANE_READY_BOARDING);
+        pkt.setId( pilot.getId() );
+        pkt.setPilotState( pilot.getPilotState() );
+        clientCom.writeObject(pkt);
+
+        /* Receive Message */
+        pkt = (Message) clientCom.readObject();
+        pilot.setPilotState( pkt.getPilotState() );
+
+        clientCom.close();
+
     }
 
     /**
      * It's called by the pilot to park the plane at the transfer gate
      */
-
     public void parkAtTransferGate() {
-        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.AT_TRANSFER_GATE);
-        //generalRep.setPilotState(Pilot.States.AT_TRANSFER_GATE);
-//        System.out.println("PILOT: Park transfer gate");
+        ClientCom clientCom = new ClientCom("localhost", 4001);
 
+        while( !clientCom.open() )
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        System.out.println("PILOT: Plane is ready for boarding");
+        Pilot pilot = (Pilot) Thread.currentThread();
+
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.PARK_AT_TRANSFER_GATE);
+        pkt.setId( pilot.getId() );
+        pkt.setPilotState( pilot.getPilotState() );
+        clientCom.writeObject(pkt);
+
+        /* Receive Message */
+        pkt = (Message) clientCom.readObject();
+        pilot.setPilotState( pkt.getPilotState() );
+
+        clientCom.close();
     }
 }

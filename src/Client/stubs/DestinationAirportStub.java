@@ -1,8 +1,11 @@
 package Client.stubs;
 
-import ActiveEntity.Passenger;
-import ActiveEntity.Pilot;
-import SharedRegions.GeneralRep;
+import Client.common.Message;
+import Client.common.MessageType;
+import Client.communications.ClientCom;
+import Client.entities.Passenger;
+import Client.entities.Pilot;
+
 
 /**
  * Shared region : Destination Airport
@@ -31,8 +34,9 @@ public class DestinationAirportStub
     /**
      *  Destination Airport instantiation.
      *
-     *    @param repos reference to the general repository
+     *    //@param repos reference to the general repository
      */
+    /* TODO : Verificar melhor o construtor */
     public DestinationAirportStub ( /* GeneralRep repos */)
     {
         //this.generalRep = repos;
@@ -45,6 +49,7 @@ public class DestinationAirportStub
      *
      * @return number of total transported passengers
      */
+    /* TODO : Modificar para comunicar com o servidor */
     public int getTotalPassengers()
     {
         return totalPassengers;
@@ -58,22 +63,34 @@ public class DestinationAirportStub
      *
      *  It is called by the PASSENGER when he leaves the plane
      *
-     *
      */
-    public synchronized void leaveThePlane() {
-        int passId = ((Passenger) Thread.currentThread()).getpId();
+    public void leaveThePlane() {
+        ClientCom clientCom = new ClientCom("localhost", 4001);
 
-        //System.out.println("PASSENGER " + passId + ": Left the plane");
-        ((Passenger) Thread.currentThread()).setpState(Passenger.States.AT_DESTINATION);
-        //generalRep.setPassengerState(passId, Passenger.States.AT_DESTINATION);
-        nPassengers--;
-        totalPassengers++;
-        //System.out.println(nPassengers);
-        if (nPassengers == 0)
+        while( !clientCom.open() )
         {
-//            System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot");
-            notifyAll();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
+
+        Passenger passenger = (Passenger) Thread.currentThread();
+        System.out.println("PASSENGER " + passenger.getpId() + ": Left the plane");
+
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.LEAVE_PLANE);
+        pkt.setId( passenger.getId() );
+        pkt.setPilotState( passenger.getpState() );
+        clientCom.writeObject(pkt);
+
+        pkt = (Message) clientCom.readObject();
+        passenger.setpState( pkt.getPassengerState() );
+
+        clientCom.close();
     }
 
 
@@ -86,7 +103,9 @@ public class DestinationAirportStub
      *
      *  @param nPass number of passengers in the plane
      */
-    public synchronized void announceArrival(int nPass) {
+
+    //* TODO : Modificar para comunicar com o servidor */
+    public void announceArrival(int nPass) {
 
         nPassengers = nPass;
 

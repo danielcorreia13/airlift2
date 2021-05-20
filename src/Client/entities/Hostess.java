@@ -65,6 +65,7 @@ public class Hostess extends Thread
     /**
      * Main loop of the hostess that runs it's life cycle
      */
+    @Override
     public void run()
     {
         int count = 0;

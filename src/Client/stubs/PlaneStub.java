@@ -1,5 +1,8 @@
 package Client.stubs;
 
+import Client.common.Message;
+import Client.common.MessageType;
+import Client.communications.ClientCom;
 import Client.entities.Hostess;
 import Client.entities.Passenger;
 import Client.entities.Pilot;
@@ -36,8 +39,9 @@ public class PlaneStub
     /**
      *  Plane instantiation.
      *
-     *    @param repos reference to the general repository
+     *    //@param repos reference to the general repository
      */
+    /* TODO : Analisar o construtor */
     public PlaneStub ( /* GeneralRep repos */ )
     {
         //generalRep = repos;
@@ -58,38 +62,43 @@ public class PlaneStub
      *  Or if number of passengers on board is between min and max, and departure queue is empty
      * @param nPass number of passengers that boarded the plane
      */
-    public synchronized void informPlaneIsReadyToTakeOff(int nPass)
+    public void informPlaneIsReadyToTakeOff(int nPass)
     {
-        while (nPassengers != nPass){
-            try{
-                wait();
-            }catch (InterruptedException ignored){}
+        /* TODO : Verificar o hostName e portNumb */
+        ClientCom clientCom = new ClientCom("localhost", 4001);
+
+        while( !clientCom.open() )
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
 
-        allInBoard = true;
+        Hostess hostess = (Hostess) Thread.currentThread();
+        System.out.println("HOSTESS: Inform that plane is ready to takeoff");
 
-        ((Hostess) Thread.currentThread()).sethState(Hostess.States.READY_TO_FLY);
-        //generalRep.setHostess(Hostess.States.READY_TO_FLY);
-        //generalRep.writeLog("Departed with " + nPass + " passengers");
-        //System.out.println("HOSTESS->PILOT: Plane is ready for takeoff");
+        Message pkt = new Message();
 
-        notifyAll();
+        /* Send Message */
+        pkt.setType(MessageType.INFORM_PLANE_READY_TAKEOFF);
+        pkt.setId( hostess.getId() );
+        pkt.setHostState( hostess.gethState() );
+        pkt.setInt1(nPass);                                /* Enviar o parametro recebido na funcao */
+        clientCom.writeObject(pkt);
 
+        pkt = (Message) clientCom.readObject();
+        hostess.sethState( pkt.getHostState() );
+
+        /*TODO : Atualizar no hostess o valor recebido do servidor*/
+        //hostess.setNPass( pkt.getInt1() );
+
+        clientCom.close();
     }
 
 
-    /**
-     *  Operation to set plane at destination
-     *
-     * It is called by pilot on destination point
-     *
-     * @param atDestination new value
-     */
-    public synchronized void setAtDestination(boolean atDestination)
-    {
-        this.atDestination = atDestination;
-        notifyAll();
-    }
+
 
     /**
      *  Operation inform that plane is at destination
@@ -98,6 +107,7 @@ public class PlaneStub
      *
      * @return true if at destination
      */
+    /* TODO : Modificar para comunicar com o servidor */
     public synchronized boolean isAtDestination()
     {
         return this.atDestination;
@@ -113,6 +123,7 @@ public class PlaneStub
      *
      *
      */
+    /* TODO : Modificar para comunicar com o servidor */
     public synchronized void waitForEndOfFlight()
     {
 
@@ -137,6 +148,7 @@ public class PlaneStub
      *
      *
      */
+    /* TODO : Modificar para comunicar com o servidor */
     public synchronized void boardThePlane()
     {
 
@@ -153,12 +165,54 @@ public class PlaneStub
     //--------------------------------------------------------------------------------
 
     /**
+     *  Operation to set plane at destination
+     *
+     * It is called by pilot on destination point
+     *
+     * @param atDestination new value
+     */
+    public void setAtDestination(boolean atDestination)
+    {
+        /* TODO : hostName e portNumb estao incorretos */
+        ClientCom clientCom = new ClientCom("localhost", 4001);
+
+        while( !clientCom.open() )
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        Pilot pilot = (Pilot) Thread.currentThread();
+        System.out.println("PILOT: Inform that plane is at destination");
+
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.ANNOUNCE_ARRIVAL);
+        pkt.setId( pilot.getId() );
+        pkt.setPilotState( pilot.getPilotState() );
+        pkt.setBool1(atDestination);                              /* Enviar o parametro recebido na funcao */
+        clientCom.writeObject(pkt);
+
+        pkt = (Message) clientCom.readObject();
+        pilot.setPilotState( pkt.getPilotState() );
+
+        /*TODO : Atualizar o valor recebido do servidor */
+        //pilot.setAtDestination( pkt.getBool1() );
+
+        clientCom.close();
+    }
+    /**
      *  Operation inform that PILOT is waiting for the hostess signal, indicating that all passengers are on board.
      *
      *  It is called by the PILOT while waiting for all passengers on board
      *
      *    @return void
      */
+    /* TODO : Modificar para comunicar com o servidor */
     public synchronized int waitForAllInBoard()
     {
         //System.out.println("PILOT: Waiting for all passengers on board");
