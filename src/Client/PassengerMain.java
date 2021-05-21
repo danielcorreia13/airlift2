@@ -4,7 +4,7 @@ import Client.entities.Passenger;
 import Client.stubs.DepartureAirportStub;
 import Client.stubs.DestinationAirportStub;
 import Client.stubs.PlaneStub;
-import Common.RunParameters;
+import Client.Settings;
 
 /**
  * Passenger Main
@@ -43,9 +43,9 @@ public class PassengerMain
         destinationAirportStub = new DestinationAirportStub();
         planeStub = new PlaneStub();
 
-        passenger = new Passenger[RunParameters.nPassengers];
+        passenger = new Passenger[Common.RunParameters.nPassengers];
 
-        for (int i = 0; i < RunParameters.nPassengers; i++)
+        for (int i = 0; i < Settings.nPassengers; i++)
         {
             passenger[i] = new Passenger( "Passenger" + i, i, departureAirportStub, destinationAirportStub, planeStub);
         }
