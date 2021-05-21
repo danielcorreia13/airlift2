@@ -19,7 +19,7 @@ public class Message implements Serializable {
      *
      * @serial id
      */
-    private long id;
+    private int id;
 
     /**
      * Entity ID is valid
@@ -36,18 +36,11 @@ public class Message implements Serializable {
     private int hostState;
 
     /**
-     * Passenger Entity State
+     * Entity State
      *
      * @serial hostState
      */
-    private int passengerState;
-
-    /**
-     * Pilot Entity State
-     *
-     * @serial hostState
-     */
-    private int pilotState;
+    private int state;
 
     /**
      * Hostess Entity state is valid
@@ -84,6 +77,13 @@ public class Message implements Serializable {
      */
     private boolean validType;
 
+
+    /**
+     * String value to be transported
+     */
+
+    private String str;
+
     /**
      * First int value to be transported
      *
@@ -98,33 +98,33 @@ public class Message implements Serializable {
      */
     private boolean validInt1;
 
-    /**
-     * Second int value to be transported
-     *
-     * @serial int2
-     */
-    private int int2;
+//    /**
+//     * Second int value to be transported
+//     *
+//     * @serial int2
+//     */
+//    private int int2;
+//
+//    /**
+//     * Second int value is valid
+//     *
+//     * @serial validInt2
+//     */
+//    private boolean validInt2;
 
-    /**
-     * Second int value is valid
-     *
-     * @serial validInt2
-     */
-    private boolean validInt2;
-
-    /**
-     * Third int value to be transported
-     *
-     * @serial int3
-     */
-    private int int3;
-
-    /**
-     * Third int value is valid
-     *
-     * @serial validInt3
-     */
-    private boolean validInt3;
+//    /**
+//     * Third int value to be transported
+//     *
+//     * @serial int3
+//     */
+//    private int int3;
+//
+//    /**
+//     * Third int value is valid
+//     *
+//     * @serial validInt3
+//     */
+//    private boolean validInt3;
 
     /**
      * First boolean value to be transported
@@ -140,47 +140,20 @@ public class Message implements Serializable {
      */
     private boolean validBool1;
 
-    /**
-     * Second boolean value to be transported
-     *
-     * @serial boole2
-     */
-    private boolean bool2;
+//    /**
+//     * Second boolean value to be transported
+//     *
+//     * @serial boole2
+//     */
+//    private boolean bool2;
+//
+//    /**
+//     * Second boolean value is valid
+//     *
+//     * @serial validBool2
+//     */
+//    private boolean validBool2;
 
-    /**
-     * Second boolean value is valid
-     *
-     * @serial validBool2
-     */
-    private boolean validBool2;
-
-    /**
-     * Integer array, useful to pass amount of luggages at start of passenger
-     *
-     * @serial intArray1
-     */
-    private int[] intArray1;
-
-    /**
-     * Integer Array validity
-     *
-     * @serial validIntArray1
-     */
-    private boolean validIntArray1;
-
-    /**
-     * Integer array, useful to pass amount of luggages at start of passenger
-     *
-     * @serial intArray2
-     */
-    private int[] intArray2;
-
-    /**
-     * Integer Array validity
-     *
-     * @serial validIntArray2
-     */
-    private boolean validIntArray2;
 
     /**
      * Packet instantiation
@@ -193,12 +166,9 @@ public class Message implements Serializable {
         this.validPassengerState = false;
         this.validType = false;
         this.validInt1 = false;
-        this.validInt2 = false;
-        this.validInt3 = false;
+
         this.validBool1 = false;
-        this.validBool2 = false;
-        this.validIntArray1 = false;
-        this.validIntArray2 = false;
+
     }
 
     /**
@@ -206,7 +176,7 @@ public class Message implements Serializable {
      *
      * @return entity ID
      */
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -215,9 +185,26 @@ public class Message implements Serializable {
      *
      * @param id entity ID
      */
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
         this.validID = true;
+    }
+
+    /**
+     * Get string
+     *
+     * @return string
+     */
+    public String getStr() {
+        return str;
+    }
+    /**
+     * Set string to send
+     *
+     * @param str String to put
+     */
+    public void setStr(String str) {
+        this.str = str;
     }
 
     /**
@@ -239,26 +226,6 @@ public class Message implements Serializable {
         return this.hostState;
     }
 
-    /**
-     * Return Pilot Entity state
-     *
-     * @return Pilot entity state
-     */
-    public int getPilotState()
-    {
-        return this.pilotState;
-    }
-
-    /**
-     * Return Passenger Entity state
-     *
-     * @return Passenger entity state
-     */
-    public int getPassengerState()
-    {
-        return this.passengerState;
-    }
-
 
     /**
      * Set Hostess entity state
@@ -276,22 +243,22 @@ public class Message implements Serializable {
      *
      * @param state pilot entity current state
      */
-    public void setPilotState(int state)
+    public void setState(int state)
     {
-        this.pilotState = state;
+        this.state = state;
         this.validPilotState = true;
     }
 
+
     /**
-     * Set Pilot entity state
+     * Return entity state
      *
-     * @param state passenger entity current state
+     * @return entity state
      */
-    public void setPassengerState(int state)
-    {
-        this.passengerState = state;
-        this.validPassengerState = true;
+    public int getState() {
+        return state;
     }
+
 
     /**
      * Return Hostess entity state validity
@@ -384,67 +351,6 @@ public class Message implements Serializable {
         return this.validInt1;
     }
 
-    /**
-     * Get second integer value
-     *
-     * @return second integer
-     */
-    public int getInt2()
-    {
-        return this.int2;
-    }
-
-    /**
-     * Set second integer value
-     *
-     * @param int2
-     */
-    public void setInt2(int int2)
-    {
-        this.int2 = int2;
-        this.validInt2 = true;
-    }
-
-    /**
-     * Get second integer value validity
-     *
-     * @return integer 1 is valid
-     */
-    public boolean getValidInt2()
-    {
-        return this.validInt2;
-    }
-
-    /**
-     * Get third integer value
-     *
-     * @return third integer
-     */
-    public int getInt3()
-    {
-        return this.int3;
-    }
-
-    /**
-     * Set third integer value
-     *
-     * @param int3
-     */
-    public void setInt3(int int3)
-    {
-        this.int3 = int3;
-        this.validInt3 = true;
-    }
-
-    /**
-     * Get third integer value validity
-     *
-     * @return integer 1 is valid
-     */
-    public boolean getValidInt3()
-    {
-        return this.validInt3;
-    }
 
     /**
      * Get first boolean value
@@ -477,101 +383,6 @@ public class Message implements Serializable {
         return this.validBool1;
     }
 
-    /**
-     * Get second boolean value
-     *
-     * @return second boolean
-     */
-    public boolean getBool2()
-    {
-        return this.bool2;
-    }
 
-    /**
-     * Set second boolean value to given value
-     *
-     * @param bool2
-     */
-    public void setBool2(boolean bool2)
-    {
-        this.bool2 = bool2;
-        this.validBool2 = true;
-    }
-
-    /**
-     * Get second boolean value validity
-     *
-     * @return boolean 1 validity
-     */
-    public boolean getValidBool2()
-    {
-        return this.validBool2;
-    }
-
-    /**
-     * Get intArray1 value
-     *
-     * @return array
-     */
-    public int[] getIntArray1() {
-        return this.intArray1;
-    }
-
-    /**
-     * set intArray1 value to be sent
-     *
-     * @param intArray1
-     */
-    public void setIntArray1(int[] intArray1) {
-        this.intArray1 = intArray1;
-        this.validIntArray1 = true;
-    }
-
-    /**
-     * Get validity of intArray1 field
-     *
-     * @return validIntArray1
-     */
-    public boolean getValidIntArray1() {
-        return this.validIntArray1;
-    }
-
-    /**
-     * Get intArray2 value
-     *
-     * @return array
-     */
-    public int[] getIntArray2() {
-        return this.intArray2;
-    }
-
-    /**
-     * set intArray2 value to be sent
-     *
-     * @param intArray2
-     */
-    public void setIntArray2(int[] intArray2) {
-        this.intArray2 = intArray2;
-        this.validIntArray2 = true;
-    }
-
-    /**
-     * Get validity of intArray2 field
-     *
-     * @return validIntArray2
-     */
-    public boolean getValidIntArray2() {
-        return this.validIntArray2;
-    }
-
-    /**
-     * To String method
-     */
-    public String toString() {
-        return "{" + " id='" + getId() + "'" + ", HostState='" + getHostState() + "'" + ", type='" + getType() + "'"
-                + ", int1='" + getInt1() + "'" + ", int2='" + getInt2() + "'" + ", int3='" + getInt3() + "'"
-                + ", bool1='" + bool1 + "'" + ", bool2='" + bool2 + "'" + ", intArray1='" + getIntArray1() + "'"
-                + ", intArray2='" + getIntArray2() + "'" + "}";
-    }
 
 }

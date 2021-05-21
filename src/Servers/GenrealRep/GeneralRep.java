@@ -2,7 +2,11 @@ package Servers.GenrealRep;
 
 
 
-import Servers.Common.*;
+
+import Common.RunParameters;
+import static Common.States.Passenger.*;
+import static Common.States.Pilot.*;
+import static Common.States.Hostess.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,7 +26,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
 	/**
 	*  State of the passengers.
 	*/
-//	private final int [] passengerState;
+	private final int [] passengerState;
 
 	/**
 	*  State of the hostess.
@@ -69,12 +73,12 @@ public class GeneralRep implements Servers.Common.GeneralRep
 	       System.exit (1);
 	   }
 
-//	  passengerState = new int [Settings.nPassengers];
-//	  for (int i = 0; i < Settings.nPassengers; i++)
-//	    passengerState[i] = Passenger.States.GOING_TO_AIRPORT;
-//
-//	  hostessState = Hostess.States.WAIT_FOR_NEXT_FLIGHT;
-//	  pilotState = Pilot.States.AT_TRANSFER_GATE;
+	  passengerState = new int [RunParameters.nPassengers];
+	  for (int i = 0; i < RunParameters.nPassengers; i++)
+	    passengerState[i] = GOING_TO_AIRPORT;
+
+	  hostessState = WAIT_FOR_NEXT_FLIGHT;
+	  pilotState = AT_TRANSFER_GATE;
 	  flightId = 0;
 	  nPassenger = 0;
 	  nPassFlight = new int[10];
@@ -95,11 +99,11 @@ public class GeneralRep implements Servers.Common.GeneralRep
     */
     public synchronized void setPassengerState (int id, int state)
     {
-//    	if (passengerState[id] != state)
-//    	{
-//	    	passengerState[id] = state;
-//	    	reportStatus ();
-//    	}
+    	if (passengerState[id] != state)
+    	{
+	    	passengerState[id] = state;
+	    	reportStatus ();
+    	}
     }
 
    /**
@@ -180,43 +184,43 @@ public class GeneralRep implements Servers.Common.GeneralRep
 		StringBuilder lineStatus = new StringBuilder();                              // state line to be printed
 
 		switch (pilotState) {
-//			case Pilot.States.AT_TRANSFER_GATE -> lineStatus.append(" ATRG ");
-//			case Pilot.States.DEBOARDING -> lineStatus.append(" DRPP ");
-//			case Pilot.States.FLYING_BACK -> lineStatus.append(" FLBK ");
-//			case Pilot.States.FLYING_FORWARD -> lineStatus.append(" FLFW ");
-//			case Pilot.States.READY_FOR_BOARDING -> lineStatus.append(" RDFB ");
-//			case Pilot.States.WAIT_FOR_BOARDING -> lineStatus.append(" WTFB ");
+			case AT_TRANSFER_GATE -> lineStatus.append(" ATRG ");
+			case DEBOARDING -> lineStatus.append(" DRPP ");
+			case FLYING_BACK -> lineStatus.append(" FLBK ");
+			case FLYING_FORWARD -> lineStatus.append(" FLFW ");
+			case READY_FOR_BOARDING -> lineStatus.append(" RDFB ");
+			case WAIT_FOR_BOARDING -> lineStatus.append(" WTFB ");
 		}
 
 		switch (hostessState) {
-//			case Hostess.States.CHECK_PASSENGER -> lineStatus.append(" CKPS ");
-//			case Hostess.States.READY_TO_FLY -> lineStatus.append(" RDTF ");
-//			case Hostess.States.WAIT_FOR_NEXT_FLIGHT -> lineStatus.append(" WTFL ");
-//			case Hostess.States.WAIT_FOR_PASSENGER -> lineStatus.append(" WTFP ");
+			case CHECK_PASSENGER -> lineStatus.append(" CKPS ");
+			case READY_TO_FLY -> lineStatus.append(" RDTF ");
+			case WAIT_FOR_NEXT_FLIGHT -> lineStatus.append(" WTFL ");
+			case WAIT_FOR_PASSENGER -> lineStatus.append(" WTFP ");
 		}
 
-//		for (int i = 0; i < Settings.nPassengers; i++)
-//			switch (passengerState[i]) {
-//				case Passenger.States.GOING_TO_AIRPORT -> lineStatus.append(" GTAP ");
-//				case Passenger.States.AT_DESTINATION -> {
-//					lineStatus.append(" ATDS ");
-//					nPassArrived++;
-//				}
-//				case Passenger.States.IN_FLIGHT -> {
-//					lineStatus.append(" INFL ");
-//					nPassPlane++;
-//				}
-//				case Passenger.States.IN_QUEUE -> {
-//					lineStatus.append(" INQE ");
-//					nPassQueue++;
-//				}
-//			}
+		for (int i = 0; i < RunParameters.nPassengers; i++)
+			switch (passengerState[i]) {
+				case GOING_TO_AIRPORT -> lineStatus.append(" GTAP ");
+				case AT_DESTINATION -> {
+					lineStatus.append(" ATDS ");
+					nPassArrived++;
+				}
+				case IN_FLIGHT -> {
+					lineStatus.append(" INFL ");
+					nPassPlane++;
+				}
+				case IN_QUEUE -> {
+					lineStatus.append(" INQE ");
+					nPassQueue++;
+				}
+			}
 
 		lineStatus.append("  ").append(nPassQueue).append("    ").append(nPassPlane).append("    ").append(nPassArrived);
-//		if (hostessState == Hostess.States.READY_TO_FLY){
-//			if (nPassPlane > nPassFlight[flightId-1])
-//				nPassFlight[flightId-1] = nPassPlane;
-//		}
+		if (hostessState == READY_TO_FLY){
+			if (nPassPlane > nPassFlight[flightId-1])
+				nPassFlight[flightId-1] = nPassPlane;
+		}
 		log.println (lineStatus);
 		log.flush();
 	}

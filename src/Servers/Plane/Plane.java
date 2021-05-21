@@ -1,7 +1,10 @@
 package Servers.Plane;
 
-import Servers.Common.*;
+import Servers.Common.GeneralRep;
 
+import static Common.States.Passenger.*;
+import static Common.States.Pilot.*;
+import static Common.States.Hostess.*;
 
 /**
  * Shared region : Plane
@@ -56,7 +59,7 @@ public class Plane
      *  Or if number of passengers on board is between min and max, and departure queue is empty
      * @param nPass number of passengers that boarded the plane
      */    
-    public synchronized void informPlaneIsReadyToTakeOff(int nPass)
+    public synchronized int informPlaneIsReadyToTakeOff(int nPass)
     {
         while (nPassengers != nPass){
             try{
@@ -66,13 +69,13 @@ public class Plane
 
     	allInBoard = true;
     	
-//        ((Hostess) Thread.currentThread()).sethState(Hostess.States.READY_TO_FLY);
-//        generalRep.setHostess(Hostess.States.READY_TO_FLY);
-//        generalRep.writeLog("Departed with " + nPass + " passengers");
+        int state = READY_TO_FLY;
+        generalRep.setHostess(READY_TO_FLY);
+        generalRep.writeLog("Departed with " + nPass + " passengers");
         //System.out.println("HOSTESS->PILOT: Plane is ready for takeoff");
         
         notifyAll();
-
+        return state;
     }
 
     
@@ -135,15 +138,15 @@ public class Plane
      *
      *
      */
-    public synchronized void boardThePlane()
+    public synchronized int boardThePlane(int passId)
     {
-//
-//        int passId = ((Passenger) Thread.currentThread()).getpId();
-//        ((Passenger) Thread.currentThread()).setpState(Passenger.States.IN_FLIGHT);
-//        generalRep.setPassengerState(passId, Passenger.States.IN_FLIGHT);
+
+        int state = IN_FLIGHT;
+        generalRep.setPassengerState(passId, IN_FLIGHT);
         //System.out.println("PASSENGER "+passId+ ": Seated on plane");
         nPassengers++;
         notifyAll();
+        return state;
     }
     
     
@@ -157,13 +160,13 @@ public class Plane
      *
      *    @return void
      */   
-    public synchronized int waitForAllInBoard()
+    public synchronized int[] waitForAllInBoard()
     {
     	//System.out.println("PILOT: Waiting for all passengers on board");
         nPassengers = 0;
-//
-//    	((Pilot) Thread.currentThread()).setPilotState(Pilot.States.WAIT_FOR_BOARDING);
-//    	generalRep.setPilotState(Pilot.States.WAIT_FOR_BOARDING);
+
+//        int state = WAIT_FOR_BOARDING;
+    	generalRep.setPilotState(WAIT_FOR_BOARDING);
     	try 
     	{
             while( !allInBoard)
@@ -171,9 +174,12 @@ public class Plane
     	}
     	catch (InterruptedException ignored) {}
     	allInBoard = false;
-//        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.FLYING_FORWARD);
-//
-//        generalRep.setPilotState(Pilot.States.FLYING_FORWARD);
-    	return nPassengers;
+        int state = FLYING_FORWARD;
+
+        generalRep.setPilotState(FLYING_FORWARD);
+        int[] ret = new int[2];
+        ret[0] = nPassengers;
+        ret[1] = state;
+    	return ret;
     }
 }

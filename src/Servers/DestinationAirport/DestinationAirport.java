@@ -1,6 +1,9 @@
 package Servers.DestinationAirport;
 
 import Servers.Common.*;
+import static Common.States.Passenger.*;
+import static Common.States.Pilot.*;
+import static Common.States.Hostess.*;
 
 
 /**
@@ -60,20 +63,20 @@ public class DestinationAirport
      *
      *
      */     
-	public synchronized void leaveThePlane() {
-//		int passId = ((Passenger) Thread.currentThread()).getpId();
-//
-//		//System.out.println("PASSENGER " + passId + ": Left the plane");
-//		((Passenger) Thread.currentThread()).setpState(Passenger.States.AT_DESTINATION);
-//		generalRep.setPassengerState(passId, Passenger.States.AT_DESTINATION);
+	public synchronized int leaveThePlane(int passId) {
+
+		//System.out.println("PASSENGER " + passId + ": Left the plane");
+		int state = AT_DESTINATION;
+		generalRep.setPassengerState(passId, AT_DESTINATION);
         nPassengers--;
         totalPassengers++;
         //System.out.println(nPassengers);
         if (nPassengers == 0) 
         {
-//            System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot");
+            System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot");
             notifyAll();
-        }            
+        }
+        return state;
     }
 
 
@@ -87,14 +90,14 @@ public class DestinationAirport
      *
      *  @param nPass number of passengers in the plane
      */ 
-    public synchronized void announceArrival(int nPass) {
+    public synchronized int announceArrival(int nPass) {
 
         nPassengers = nPass;
         
         //System.out.println("PILOT: Plane arrived at destination");
-//        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.DEBOARDING);
-//        generalRep.writeLog("Arrived");
-//        generalRep.setPilotState(Pilot.States.DEBOARDING);
+        int state = DEBOARDING;
+        generalRep.writeLog("Arrived");
+        generalRep.setPilotState(DEBOARDING);
         
         //System.out.println("    [!] Set destinanion flag at TRUE");
         
@@ -108,10 +111,11 @@ public class DestinationAirport
             }catch (InterruptedException ignored){}
         }
 
-//        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.FLYING_BACK);
-//        generalRep.writeLog("Returning");
-//        generalRep.setPilotState(Pilot.States.FLYING_BACK);
+        state = FLYING_BACK;
+        generalRep.writeLog("Returning");
+        generalRep.setPilotState(FLYING_BACK);
 
         //System.out.println("\n\n    [!] Set destinanion flag at FALSE");
+        return state;
     }
 }

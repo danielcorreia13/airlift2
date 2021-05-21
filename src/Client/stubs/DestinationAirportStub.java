@@ -50,13 +50,13 @@ public class DestinationAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.LEAVE_PLANE);
-        pkt.setId( passenger.getId() );
-        pkt.setPassengerState( passenger.getpState() );
+        pkt.setId( passenger.getpId() );
+//        pkt.setState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        passenger.setpState( pkt.getPassengerState() );
+        passenger.setpState( pkt.getState() );
 
         clientCom.close();
     }
@@ -91,14 +91,14 @@ public class DestinationAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.ANNOUNCE_ARRIVAL);
-        pkt.setId( pilot.getId());
-        pkt.setPilotState( pilot.getPilotState() );
+//        pkt.setId( pilot.getId());
+        pkt.setState( pilot.getPilotState() );
         pkt.setInt1(nPass);
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        pilot.setPilotState( pkt.getPilotState() );
+        pilot.setPilotState( pkt.getState() );
 
         clientCom.close();
     }
@@ -127,13 +127,13 @@ public class DestinationAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.GET_TOTAL_PASSENGERS);
-        pkt.setId( pilot.getId() );
-        pkt.setPilotState( pilot.getPilotState() );
+//        pkt.setId( pilot.getId() );
+        pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        pilot.setPilotState( pkt.getPilotState() );
+        pilot.setPilotState( pkt.getState() );
 
         clientCom.close();
 

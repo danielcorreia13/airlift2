@@ -67,7 +67,7 @@ public class DepartureAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.CHECK_QUEUE_EMPTY);
-        pkt.setId( hostess.getId() );
+//        pkt.setId( hostess.getId() );
         pkt.setHostState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
@@ -94,7 +94,7 @@ public class DepartureAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.GET_N_PASSENGERS);
-        pkt.setId( hostess.getId() );
+//        pkt.setId( hostess.getId() );
         pkt.setHostState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
@@ -124,7 +124,7 @@ public class DepartureAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.CHECK_DOCUMENTS);
-        pkt.setId( hostess.getId() );
+//        pkt.setId( hostess.getId() );
         pkt.setHostState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
@@ -150,7 +150,7 @@ public class DepartureAirportStub
         Message pkt = new Message();
 
         pkt.setType(MessageType.WAIT_FOR_NEXT_PASSENGER);
-        pkt.setId( hostess.getId() );
+//        pkt.setId( hostess.getId() );
         pkt.setHostState( hostess.gethState() );
 
         clientCom.writeObject(pkt);
@@ -177,7 +177,7 @@ public class DepartureAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.WAIT_FOR_NEXT_FLIGHT);        /* Tipo de mensagem */
-        pkt.setId( hostess.getId() );                         /* Id da thread */
+//        pkt.setId( hostess.getId() );                         /* Id da thread */
         pkt.setHostState(hostess.gethState());                /* Estado atual da thread */
 
         clientCom.writeObject(pkt);                           /* Escreve o objeto na mensagem */
@@ -210,12 +210,12 @@ public class DepartureAirportStub
         /* Send Message */
         pkt.setType(MessageType.WAIT_IN_QUEUE);
         pkt.setId( passenger.getpId() );
-        pkt.setPassengerState( passenger.getpState() );
+//        pkt.setState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        passenger.setpState ( pkt.getPassengerState() );
+        passenger.setpState ( pkt.getState() );
 
         clientCom.close();
     }
@@ -237,12 +237,12 @@ public class DepartureAirportStub
 
         pkt.setType(MessageType.SHOW_DOCUMENTS);
         pkt.setId( passenger.getpId() );                               /* Envia como parametro o ID da Thread Passenger */
-        pkt.setPassengerState( passenger.getpState() );                /* Estado atual da thread */
+        pkt.setState( passenger.getpState() );                /* Estado atual da thread */
 
         clientCom.writeObject(pkt);                                    /* Escreve o objeto na mensagem */
 
         pkt = (Message) clientCom.readObject();                        /* Recebe uma mensagem do servidor */
-        passenger.setpState( pkt.getPassengerState() );                /* Atualiza o estado caso tenha mudado */
+        passenger.setpState( pkt.getState() );                /* Atualiza o estado caso tenha mudado */
 
         clientCom.close();
     }
@@ -268,13 +268,13 @@ public class DepartureAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.INFORM_PLANE_READY_BOARDING);
-        pkt.setId( pilot.getId() );
-        pkt.setPilotState( pilot.getPilotState() );
+//        pkt.setId( pilot.getId() );
+        pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        pilot.setPilotState( pkt.getPilotState() );
+        pilot.setPilotState( pkt.getState() );
 
         clientCom.close();
     }
@@ -292,13 +292,13 @@ public class DepartureAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.PARK_AT_TRANSFER_GATE);
-        pkt.setId( pilot.getId() );
-        pkt.setPilotState( pilot.getPilotState() );
+//        pkt.setId( pilot.getId() );
+        pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        pilot.setPilotState( pkt.getPilotState() );
+        pilot.setPilotState( pkt.getState() );
 
         clientCom.close();
     }

@@ -25,12 +25,6 @@ public class DepartureAirport
 
 
     /**
-     * References tio the passengers
-     */
-
-    private final Integer[] passengers;   //passenger objects
-
-    /**
      * Ready for boarding flag
      */
     private boolean readyForBoardig;
@@ -79,13 +73,12 @@ public class DepartureAirport
             passengerQueue = null;
             System.exit (1);
         }
-//
-        passengers = new Integer[RunParameters.nPassengers];
+
         showDocuments = new boolean[RunParameters.nPassengers];
         canBoard = new boolean[RunParameters.nPassengers];
         Arrays.fill(canBoard, false);
         Arrays.fill(showDocuments, false);
-        Arrays.fill(passengers, null);
+
 
         readyForBoardig = false;
         nPassengers = 0;
@@ -224,7 +217,6 @@ public class DepartureAirport
      */
     public synchronized int waitInQueue(int passId)
     {
-        passengers[passId] = passId;
         int state = IN_QUEUE;
         generalRep.setPassengerState(passId,IN_QUEUE);
 //        System.out.println("[!] PASSENGER " + passId + ": Arrived at departure airport");

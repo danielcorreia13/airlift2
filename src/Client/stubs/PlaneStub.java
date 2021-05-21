@@ -8,8 +8,6 @@ import Client.entities.Passenger;
 import Client.entities.Pilot;
 import Common.RunParameters;
 
-import javax.xml.stream.events.Comment;
-
 /**
  * Stub : Plane
  */
@@ -80,7 +78,7 @@ public class PlaneStub
 
         /* Send Message */
         pkt.setType(MessageType.INFORM_PLANE_READY_TAKEOFF);
-        pkt.setId( hostess.getId() );
+//        pkt.setId( hostess.getId() );
         pkt.setHostState( hostess.gethState() );
         pkt.setInt1(nPass);                                /* Enviar o parametro recebido na funcao */
         clientCom.writeObject(pkt);
@@ -127,13 +125,13 @@ public class PlaneStub
 
         /* Send Message */
         pkt.setType(MessageType.WAIT_END_FLIGHT);
-        pkt.setId( passenger.getId() );
-        pkt.setPassengerState( passenger.getpState() );
+        pkt.setId( passenger.getpId() );
+//        pkt.setPassengerState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        passenger.setpState( pkt.getPassengerState() );
+        passenger.setpState( pkt.getState() );
 
         System.out.println("PASSENGER " + passenger.getpId() + ": Left the plane");
         clientCom.close();
@@ -154,13 +152,13 @@ public class PlaneStub
 
         /* Send Message */
         pkt.setType(MessageType.BOARD_THE_PLANE);
-        pkt.setId( passenger.getId() );
-        pkt.setPassengerState( passenger.getpState() );
+//        pkt.setId( passenger.getId() );
+//        pkt.setPassengerState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        passenger.setpState( pkt.getPassengerState() );
+        passenger.setpState( pkt.getState() );
 
         System.out.println("PASSENGER " + passenger.getpId() + ": Board the plane");
         clientCom.close();
@@ -186,13 +184,13 @@ public class PlaneStub
 
         /* Send Message */
         pkt.setType(MessageType.ANNOUNCE_ARRIVAL);
-        pkt.setId( pilot.getId() );
-        pkt.setPilotState( pilot.getPilotState() );
+//        pkt.setId( pilot.getId() );
+        pkt.setState( pilot.getPilotState() );
         pkt.setBool1( atDestination );                              /* Enviar o parametro recebido na funcao */
         clientCom.writeObject(pkt);
 
         pkt = (Message) clientCom.readObject();
-        pilot.setPilotState( pkt.getPilotState() );
+        pilot.setPilotState( pkt.getState() );
 
         /*TODO : Atualizar o valor recebido do servidor */
         //pilot.setAtDestination( pkt.getBool1() );
@@ -215,18 +213,17 @@ public class PlaneStub
 
         /* Send Message */
         pkt.setType(MessageType.WAIT_FOR_ALL_IN_BOARD);
-        pkt.setId( pilot.getId() );
-        pkt.setPilotState( pilot.getPilotState() );
+//        pkt.setId( pilot.getId() );
+        pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        pilot.setPilotState( pkt.getPilotState() );
-        /* TODO : Receber parametro do servidor (nPassengers) */
+        pilot.setPilotState( pkt.getState() );
+        int nPassengers = pkt.getInt1();
 
         clientCom.close();
 
-        /* TODO: Retornar o numero de passageiros */
-        return 0;
+        return nPassengers;
     }
 }
