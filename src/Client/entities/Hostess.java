@@ -16,12 +16,12 @@ public class Hostess extends Thread
     /**
      *  Reference to Departure Airport
      */
-    private final DepartureAirportStub depAir;
+    private final DepartureAirportStub depAirStub;
 
     /**
      *  Reference to Plane
      */
-    private final PlaneStub plane;
+    private final PlaneStub planeStub;
 
 
     /**
@@ -39,8 +39,8 @@ public class Hostess extends Thread
     public Hostess(String name, DepartureAirportStub depAir, PlaneStub plane)
     {
         super(name);
-        this.depAir = depAir;
-        this.plane = plane;
+        this.depAirStub = depAir;
+        this.planeStub = plane;
         this.hState = Hostess.States.WAIT_FOR_NEXT_FLIGHT;
     }
 
@@ -70,17 +70,17 @@ public class Hostess extends Thread
     {
         int count = 0;
         do {
-            depAir.waitForNextFlight();
+            depAirStub.waitForNextFlight();
 
             prepareForPassBoarding();
             int max = Settings.maxPassengers;
             int min = Settings.minPassengers;
             while (true) {
-                if(depAir.getnPassengers() == max) {
+                if(depAirStub.getnPassengers() == max) {
 //                    System.out.println("HOSTESS: Plane full, informing pilot");
                     break;
                 }
-                if(depAir.empty() && depAir.getnPassengers() > min){
+                if(depAirStub.empty() && depAirStub.getnPassengers() > min){
 //                    System.out.println("HOSTESS: No passengers waiting, informing pilot");
                     break;
                 }
@@ -89,10 +89,10 @@ public class Hostess extends Thread
                     break;
                 }
                 count++;
-                depAir.waitForNextPassenger();
-                depAir.checkDocuments();
+                depAirStub.waitForNextPassenger();
+                depAirStub.checkDocuments();
             }
-            plane.informPlaneIsReadyToTakeOff(depAir.getnPassengers());
+            planeStub.informPlaneIsReadyToTakeOff(depAirStub.getnPassengers());
         }while (count < Settings.nPassengers);
     }
 

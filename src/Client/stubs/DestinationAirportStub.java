@@ -8,52 +8,18 @@ import Client.entities.Pilot;
 
 
 /**
- * Shared region : Destination Airport
+ * Stub: Destination Airport
  */
 public class DestinationAirportStub
 {
-    /**
-     * Reference to general repository
-     */
-    //private final GeneralRep generalRep;
-
-    /**
-     * Number of passengers
-     */
-    private int nPassengers;
-
-    /**
-     * Number of total passengers
-     */
-    private int totalPassengers;
-
-
-
     /*                                 CONSTRUCTOR                                   */
     /*-------------------------------------------------------------------------------*/
     /**
-     *  Destination Airport instantiation.
+     *  Destination Airport Stub instantiation.
      *
      *    //@param repos reference to the general repository
      */
-    /* TODO : Verificar melhor o construtor */
-    public DestinationAirportStub ( /* GeneralRep repos */)
-    {
-        //this.generalRep = repos;
-        this.nPassengers = 0;
-        totalPassengers = 0;
-    }
-
-    /**
-     * Get number of total transported passengers
-     *
-     * @return number of total transported passengers
-     */
-    /* TODO : Modificar para comunicar com o servidor */
-    public int getTotalPassengers()
-    {
-        return totalPassengers;
-    }
+    public DestinationAirportStub ( /* GeneralRep repos */ ) { }
 
 
     /*                                 PASSENGER                                     */
@@ -65,6 +31,7 @@ public class DestinationAirportStub
      *
      */
     public void leaveThePlane() {
+        /* TODO : Modificar locahost e portNumb */
         ClientCom clientCom = new ClientCom("localhost", 4001);
 
         while( !clientCom.open() )
@@ -84,9 +51,10 @@ public class DestinationAirportStub
         /* Send Message */
         pkt.setType(MessageType.LEAVE_PLANE);
         pkt.setId( passenger.getId() );
-        pkt.setPilotState( passenger.getpState() );
+        pkt.setPassengerState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
+        /* Receive Message */
         pkt = (Message) clientCom.readObject();
         passenger.setpState( pkt.getPassengerState() );
 
@@ -103,33 +71,73 @@ public class DestinationAirportStub
      *
      *  @param nPass number of passengers in the plane
      */
-
-    //* TODO : Modificar para comunicar com o servidor */
     public void announceArrival(int nPass) {
+        /* TODO : Modificar locahost e portNumb */
+        ClientCom clientCom = new ClientCom("localhost", 4001);
 
-        nPassengers = nPass;
-
-        //System.out.println("PILOT: Plane arrived at destination");
-        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.DEBOARDING);
-        //generalRep.writeLog("Arrived");
-        //generalRep.setPilotState(Pilot.States.DEBOARDING);
-
-        //System.out.println("    [!] Set destinanion flag at TRUE");
-
-        notifyAll();
-
-        //System.out.println("PILOT: Waiting for all passengers to leave the plane");
-        while ( nPassengers != 0)
+        while( !clientCom.open() )
         {
-            try{
-                wait();
-            }catch (InterruptedException ignored){}
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
 
-        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.FLYING_BACK);
-        //generalRep.writeLog("Returning");
-        //generalRep.setPilotState(Pilot.States.FLYING_BACK);
+        Pilot pilot = ((Pilot) Thread.currentThread());
+        System.out.println("PILOT: Plane arrived at destination");
 
-        //System.out.println("\n\n    [!] Set destinanion flag at FALSE");
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.ANNOUNCE_ARRIVAL);
+        pkt.setId( pilot.getId());
+        pkt.setPilotState( pilot.getPilotState() );
+        pkt.setInt1(nPass);
+        clientCom.writeObject(pkt);
+
+        /* Receive Message */
+        pkt = (Message) clientCom.readObject();
+        pilot.setPilotState( pkt.getPilotState() );
+
+        clientCom.close();
+    }
+
+    /**
+     * Get number of total transported passengers
+     *
+     * @return number of total transported passengers
+     */
+    public int getTotalPassengers() {
+        /* TODO : Modificar locahost e portNumb */
+        ClientCom clientCom = new ClientCom("localhost", 4001);
+
+        while( !clientCom.open() )
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        Pilot pilot = (Pilot) Thread.currentThread();
+
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.GET_TOTAL_PASSENGERS);
+        pkt.setId( pilot.getId() );
+        pkt.setPilotState( pilot.getPilotState() );
+        clientCom.writeObject(pkt);
+
+        /* Receive Message */
+        pkt = (Message) clientCom.readObject();
+        pilot.setPilotState( pkt.getPilotState() );
+
+        clientCom.close();
+
+        /* TODO: Retornar o numero de passageiros */
+        return 0;
     }
 }

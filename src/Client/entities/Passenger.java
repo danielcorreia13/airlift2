@@ -15,17 +15,17 @@ public class Passenger extends Thread {
      * Reference to Departure Airport
      */
 
-    private final DepartureAirportStub depAir;
+    private final DepartureAirportStub depAirStub;
 
     /**
      * Reference to Destination Airport
      */
-    private final DestinationAirportStub destAir;
+    private final DestinationAirportStub destAirStub;
 
     /**
      * Reference to Plane
      */
-    private final PlaneStub plane;
+    private final PlaneStub planeStub;
 
 
     /**
@@ -45,16 +45,16 @@ public class Passenger extends Thread {
      *
      * @param name    thread name
      * @param id      passenger id
-     * @param depAir  reference to the Departure Airport
-     * @param destAir reference to the Destination Airport
-     * @param plane   reference to the Plane
+     * @param depAirStub  reference to the Departure Airport
+     * @param destAirStub reference to the Destination Airport
+     * @param planeStub   reference to the Plane
      */
-    public Passenger(String name, int id, DepartureAirportStub depAir, DestinationAirportStub destAir, PlaneStub plane)
+    public Passenger(String name, int id, DepartureAirportStub depAirStub, DestinationAirportStub destAirStub, PlaneStub planeStub)
     {
         super(name);
-        this.depAir = depAir;
-        this.destAir = destAir;
-        this.plane = plane;
+        this.depAirStub = depAirStub;
+        this.destAirStub = destAirStub;
+        this.planeStub = planeStub;
         this.pState = Passenger.States.GOING_TO_AIRPORT;
         this.pId = id;
     }
@@ -95,13 +95,13 @@ public class Passenger extends Thread {
         try {
             travelToAirport();
             sleep(30);
-            depAir.waitInQueue();
+            depAirStub.waitInQueue();
 
-            plane.boardThePlane();
+            planeStub.boardThePlane();
             sleep(45);
-            plane.waitForEndOfFlight();
+            planeStub.waitForEndOfFlight();
 
-            destAir.leaveThePlane();
+            destAirStub.leaveThePlane();
         } catch (InterruptedException e) {
             System.out.print("Something went wrong");
         }

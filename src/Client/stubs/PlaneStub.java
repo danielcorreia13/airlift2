@@ -9,30 +9,10 @@ import Client.entities.Pilot;
 //import SharedRegions.GeneralRep;
 
 /**
- * Shared region : Plane
+ * Stub : Plane
  */
 public class PlaneStub
 {
-    /**
-     * Reference to general repository
-     */
-    //private final GeneralRep generalRep;
-
-    /**
-     * All passengers on board flag
-     */
-    private boolean allInBoard;
-
-    /**
-     * Number of passengers flag
-     */
-    private int nPassengers;
-
-    /**
-     * Plane at destination flag
-     */
-    private boolean atDestination;
-
     /*                                 CONSTRUCTOR                                   */
     /*-------------------------------------------------------------------------------*/
 
@@ -42,12 +22,11 @@ public class PlaneStub
      *    //@param repos reference to the general repository
      */
     /* TODO : Analisar o construtor */
-    public PlaneStub ( /* GeneralRep repos */ )
-    {
-        //generalRep = repos;
+    public PlaneStub ( /* GeneralRep repos */ ) {
+        /*generalRep = repos;
         this.allInBoard = false;
         setAtDestination(false);
-        this.nPassengers = 0;
+        this.nPassengers = 0;*/
     }
 
     /*                                  HOSTESS                                      */
@@ -62,8 +41,7 @@ public class PlaneStub
      *  Or if number of passengers on board is between min and max, and departure queue is empty
      * @param nPass number of passengers that boarded the plane
      */
-    public void informPlaneIsReadyToTakeOff(int nPass)
-    {
+    public void informPlaneIsReadyToTakeOff(int nPass) {
         /* TODO : Verificar o hostName e portNumb */
         ClientCom clientCom = new ClientCom("localhost", 4001);
 
@@ -98,8 +76,6 @@ public class PlaneStub
     }
 
 
-
-
     /**
      *  Operation inform that plane is at destination
      *
@@ -107,10 +83,10 @@ public class PlaneStub
      *
      * @return true if at destination
      */
-    /* TODO : Modificar para comunicar com o servidor */
-    public synchronized boolean isAtDestination()
-    {
-        return this.atDestination;
+    /* TODO : Verificar se e necessario */
+    public boolean isAtDestination() {
+        //return this.atDestination;
+        return false;
     }
 
     //                                  PASSENGER                                    //
@@ -123,22 +99,35 @@ public class PlaneStub
      *
      *
      */
-    /* TODO : Modificar para comunicar com o servidor */
-    public synchronized void waitForEndOfFlight()
-    {
+    public void waitForEndOfFlight() {
+        /* TODO : Modificar locahost e portNumb */
+        ClientCom clientCom = new ClientCom("localhost", 4001);
 
-//    	int passId = ((Passenger) Thread.currentThread()).getpId();
-        //System.out.println("[!] PASSENGER "+ passId +": Waiting for the end of the flight");
-
-        while ( !isAtDestination() )
+        while( !clientCom.open() )
         {
             try {
-                wait();
-            } catch (InterruptedException ignored) {}
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
 
-        notifyAll();
+        Passenger passenger = (Passenger) Thread.currentThread();
 
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.WAIT_END_FLIGHT);
+        pkt.setId( passenger.getId() );
+        pkt.setPassengerState( passenger.getpState() );
+        clientCom.writeObject(pkt);
+
+        /* Receive Message */
+        pkt = (Message) clientCom.readObject();
+        passenger.setpState( pkt.getPassengerState() );
+
+        System.out.println("PASSENGER " + passenger.getpId() + ": Left the plane");
+        clientCom.close();
     }
 
     /**
@@ -146,20 +135,37 @@ public class PlaneStub
      *
      *  It is called by the PASSENGER when enters the plane
      *
-     *
      */
-    /* TODO : Modificar para comunicar com o servidor */
-    public synchronized void boardThePlane()
-    {
+    public void boardThePlane() {
+        /* TODO : Modificar locahost e portNumb */
+        ClientCom clientCom = new ClientCom("localhost", 4001);
 
-        int passId = ((Passenger) Thread.currentThread()).getpId();
-        ((Passenger) Thread.currentThread()).setpState(Passenger.States.IN_FLIGHT);
-        //generalRep.setPassengerState(passId, Passenger.States.IN_FLIGHT);
-        //System.out.println("PASSENGER "+passId+ ": Seated on plane");
-        nPassengers++;
-        notifyAll();
+        while( !clientCom.open() )
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        Passenger passenger = (Passenger) Thread.currentThread();
+
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.BOARD_THE_PLANE);
+        pkt.setId( passenger.getId() );
+        pkt.setPassengerState( passenger.getpState() );
+        clientCom.writeObject(pkt);
+
+        /* Receive Message */
+        pkt = (Message) clientCom.readObject();
+        passenger.setpState( pkt.getPassengerState() );
+
+        System.out.println("PASSENGER " + passenger.getpId() + ": Board the plane");
+        clientCom.close();
     }
-
 
     //                                   PILOT                                      //
     //--------------------------------------------------------------------------------
@@ -171,8 +177,7 @@ public class PlaneStub
      *
      * @param atDestination new value
      */
-    public void setAtDestination(boolean atDestination)
-    {
+    public void setAtDestination(boolean atDestination) {
         /* TODO : hostName e portNumb estao incorretos */
         ClientCom clientCom = new ClientCom("localhost", 4001);
 
@@ -210,26 +215,39 @@ public class PlaneStub
      *
      *  It is called by the PILOT while waiting for all passengers on board
      *
-     *    @return void
+     *    @return nPassengers
      */
-    /* TODO : Modificar para comunicar com o servidor */
-    public synchronized int waitForAllInBoard()
-    {
-        //System.out.println("PILOT: Waiting for all passengers on board");
-        nPassengers = 0;
+    public int waitForAllInBoard() {
+        /* TODO : Modificar locahost e portNumb */
+        ClientCom clientCom = new ClientCom("localhost", 4001);
 
-        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.WAIT_FOR_BOARDING);
-        //generalRep.setPilotState(Pilot.States.WAIT_FOR_BOARDING);
-        try
+        while( !clientCom.open() )
         {
-            while( !allInBoard)
-                wait();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
-        catch (InterruptedException ignored) {}
-        allInBoard = false;
-        ((Pilot) Thread.currentThread()).setPilotState(Pilot.States.FLYING_FORWARD);
 
-        //generalRep.setPilotState(Pilot.States.FLYING_FORWARD);
-        return nPassengers;
+        Pilot pilot = (Pilot) Thread.currentThread();
+
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.WAIT_FOR_ALL_IN_BOARD);
+        pkt.setId( pilot.getId() );
+        pkt.setPilotState( pilot.getPilotState() );
+        clientCom.writeObject(pkt);
+
+        /* Receive Message */
+        pkt = (Message) clientCom.readObject();
+        pilot.setPilotState( pkt.getPilotState() );
+        /* TODO : Receber parametro do servidor (nPassengers) */
+
+        clientCom.close();
+
+        /* TODO: Retornar o numero de passageiros */
+        return 0;
     }
 }

@@ -16,17 +16,17 @@ public class Pilot extends Thread
     /**
      *  Reference to Departure Airport
      */
-    private final DepartureAirportStub depAir;
+    private final DepartureAirportStub depAirStub;
 
     /**
      *  Reference to Destination Airport
      */
-    private final DestinationAirportStub destAir;
+    private final DestinationAirportStub destAirStub;
 
     /**
      *  Reference to Plane
      */
-    private final PlaneStub plane;
+    private final PlaneStub planeStub;
 
     /**
      *  Pilot state
@@ -37,17 +37,17 @@ public class Pilot extends Thread
      * Pilots constructor
      * Creates a Pilot thread and initializes it's parameters
      * @param name name of the thread
-     * @param depAir Reference to Departure Airport
-     * @param destAir Reference to Destination Airport
-     * @param plane Reference to Plane
+     * @param depAirStub Reference to Departure Airport
+     * @param destAirStub Reference to Destination Airport
+     * @param planeStub Reference to Plane
      */
 
-    public Pilot(String name, DepartureAirportStub depAir, DestinationAirportStub destAir, PlaneStub plane)
+    public Pilot(String name, DepartureAirportStub depAirStub, DestinationAirportStub destAirStub, PlaneStub planeStub)
     {
         super(name);
-        this.depAir = depAir;
-        this.destAir = destAir;
-        this.plane = plane;
+        this.depAirStub = depAirStub;
+        this.destAirStub = destAirStub;
+        this.planeStub = planeStub;
         this.pilotState = Pilot.States.AT_TRANSFER_GATE;
     }
 
@@ -75,20 +75,20 @@ public class Pilot extends Thread
     public void run()
     {
         do {
-            depAir.parkAtTransferGate();
-            depAir.informPlaneReadyForBoarding();
-            int nPass = plane.waitForAllInBoard();
+            depAirStub.parkAtTransferGate();
+            depAirStub.informPlaneReadyForBoarding();
+            int nPass = planeStub.waitForAllInBoard();
             flyToDestinationPoint();
 
-            plane.setAtDestination(true);
-            destAir.announceArrival(nPass);
-            plane.setAtDestination(false);
+            planeStub.setAtDestination(true);
+            destAirStub.announceArrival(nPass);
+            planeStub.setAtDestination(false);
 
             flyToDeparturePoint();
 
 //          System.out.println("\n");
-        } while (destAir.getTotalPassengers() != Settings.nPassengers);
-        depAir.parkAtTransferGate();
+        } while (destAirStub.getTotalPassengers() != Settings.nPassengers);
+        depAirStub.parkAtTransferGate();
     }
 
     /**
