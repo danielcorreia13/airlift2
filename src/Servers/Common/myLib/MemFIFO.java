@@ -1,4 +1,4 @@
-package Server.myLib;
+package Servers.Common.myLib;
 
 /**
  *    Parametric FIFO derived from a parametric memory.
