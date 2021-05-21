@@ -2,4 +2,4 @@
  *   Common infrastructure.
  */
 
-package Server.myLib;
+package Servers.Common.myLib;

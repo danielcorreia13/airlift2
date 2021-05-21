@@ -1,4 +1,4 @@
-package Server.myLib;
+package Servers.Common.myLib;
 
 /**
  *    Memory exception.
