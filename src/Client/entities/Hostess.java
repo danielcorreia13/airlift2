@@ -2,7 +2,8 @@ package Client.entities;
 
 import Client.stubs.DepartureAirportStub;
 import Client.stubs.PlaneStub;
-import Client.Settings;
+import Common.RunParameters;
+
 
 /**
  *   Passenger thread.
@@ -73,8 +74,8 @@ public class Hostess extends Thread
             depAirStub.waitForNextFlight();
 
             prepareForPassBoarding();
-            int max = Settings.maxPassengers;
-            int min = Settings.minPassengers;
+            int max = RunParameters.maxPassengers;
+            int min = RunParameters.minPassengers;
             while (true) {
                 if(depAirStub.getnPassengers() == max) {
 //                    System.out.println("HOSTESS: Plane full, informing pilot");
@@ -84,7 +85,7 @@ public class Hostess extends Thread
 //                    System.out.println("HOSTESS: No passengers waiting, informing pilot");
                     break;
                 }
-                if(count == Settings.nPassengers){
+                if(count == RunParameters.nPassengers){
 //                    System.out.println("HOSTESS: Last passenger boarding, informing pilot");
                     break;
                 }
@@ -93,7 +94,7 @@ public class Hostess extends Thread
                 depAirStub.checkDocuments();
             }
             planeStub.informPlaneIsReadyToTakeOff(depAirStub.getnPassengers());
-        }while (count < Settings.nPassengers);
+        }while (count < RunParameters.nPassengers);
     }
 
     /**

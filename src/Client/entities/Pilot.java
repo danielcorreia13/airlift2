@@ -1,9 +1,10 @@
 package Client.entities;
 
-import Client.Settings;
+
 import Client.stubs.DepartureAirportStub;
 import Client.stubs.DestinationAirportStub;
 import Client.stubs.PlaneStub;
+import Common.RunParameters;
 
 /**
  *   Pilot thread.
@@ -87,7 +88,7 @@ public class Pilot extends Thread
             flyToDeparturePoint();
 
 //          System.out.println("\n");
-        } while (destAirStub.getTotalPassengers() != Settings.nPassengers);
+        } while (destAirStub.getTotalPassengers() != RunParameters.nPassengers);
         depAirStub.parkAtTransferGate();
     }
 
