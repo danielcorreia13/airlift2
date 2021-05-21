@@ -1,7 +1,4 @@
-package Client.common;
-
-import Client.entities.Passenger;
-import Client.entities.Pilot;
+package Common;
 
 import java.io.Serializable;
 

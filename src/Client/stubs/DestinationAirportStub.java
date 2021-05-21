@@ -1,7 +1,7 @@
 package Client.stubs;
 
-import Client.common.Message;
-import Client.common.MessageType;
+import Common.Message;
+import Common.MessageType;
 import Client.communications.ClientCom;
 import Client.entities.Passenger;
 import Client.entities.Pilot;

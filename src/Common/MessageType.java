@@ -1,4 +1,4 @@
-package Client.common;
+package Common;
 
 public enum MessageType
 {
