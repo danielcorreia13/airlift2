@@ -6,26 +6,55 @@ import Client.communications.ClientCom;
 import Client.entities.Hostess;
 import Client.entities.Passenger;
 import Client.entities.Pilot;
+import Common.RunParameters;
+
+import javax.xml.stream.events.Comment;
 
 /**
  * Stub : Plane
  */
 public class PlaneStub
 {
+    /**
+     *  Reference to ClientCom
+     */
+    private static ClientCom clientCom;
+
+    
     /*                                 CONSTRUCTOR                                   */
     /*-------------------------------------------------------------------------------*/
 
     /**
-     *  Plane instantiation.
+     *  Plane Stub instantiation.
      *
-     *    //@param repos reference to the general repository
      */
-    /* TODO : Analisar o construtor */
-    public PlaneStub ( /* GeneralRep repos */ ) {
+    public PlaneStub () {
         /*generalRep = repos;
         this.allInBoard = false;
         setAtDestination(false);
         this.nPassengers = 0;*/
+    }
+
+    /**
+     *  Operation to performe a client communication with server
+     *
+     *  It is called by each method of this class
+     *
+     * @return ClientCom object
+     */
+    public ClientCom Communication()
+    {
+        clientCom = new ClientCom(RunParameters.DepartureAirportHostName, RunParameters.DepartureAirportPort);
+        
+        while( !clientCom.open() )
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        return clientCom;
     }
 
     /*                                  HOSTESS                                      */
@@ -39,19 +68,10 @@ public class PlaneStub
      *  Or if maximum passengers on board was reached
      *  Or if number of passengers on board is between min and max, and departure queue is empty
      * @param nPass number of passengers that boarded the plane
+     *
      */
     public void informPlaneIsReadyToTakeOff(int nPass) {
-        /* TODO : Verificar o hostName e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         Hostess hostess = (Hostess) Thread.currentThread();
         System.out.println("HOSTESS: Inform that plane is ready to takeoff");
@@ -99,17 +119,7 @@ public class PlaneStub
      *
      */
     public void waitForEndOfFlight() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         Passenger passenger = (Passenger) Thread.currentThread();
 
@@ -136,17 +146,7 @@ public class PlaneStub
      *
      */
     public void boardThePlane() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         Passenger passenger = (Passenger) Thread.currentThread();
 
@@ -177,17 +177,7 @@ public class PlaneStub
      * @param atDestination new value
      */
     public void setAtDestination(boolean atDestination) {
-        /* TODO : hostName e portNumb estao incorretos */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         Pilot pilot = (Pilot) Thread.currentThread();
         System.out.println("PILOT: Inform that plane is at destination");
@@ -198,7 +188,7 @@ public class PlaneStub
         pkt.setType(MessageType.ANNOUNCE_ARRIVAL);
         pkt.setId( pilot.getId() );
         pkt.setPilotState( pilot.getPilotState() );
-        pkt.setBool1(atDestination);                              /* Enviar o parametro recebido na funcao */
+        pkt.setBool1( atDestination );                              /* Enviar o parametro recebido na funcao */
         clientCom.writeObject(pkt);
 
         pkt = (Message) clientCom.readObject();
@@ -217,17 +207,7 @@ public class PlaneStub
      *    @return nPassengers
      */
     public int waitForAllInBoard() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         Pilot pilot = (Pilot) Thread.currentThread();
 

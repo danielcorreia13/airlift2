@@ -43,7 +43,7 @@ public class PassengerMain
         destinationAirportStub = new DestinationAirportStub();
         planeStub = new PlaneStub();
 
-        passenger = new Passenger[Main.Settings.nPassengers];
+        passenger = new Passenger[Common.RunParameters.nPassengers];
 
         for (int i = 0; i < Settings.nPassengers; i++)
         {

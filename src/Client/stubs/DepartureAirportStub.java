@@ -6,12 +6,16 @@ import Client.communications.ClientCom;
 import Client.entities.Hostess;
 import Client.entities.Passenger;
 import Client.entities.Pilot;
+import Common.RunParameters;
 
 /**
  * Stub : Departure Airport
  */
 public class DepartureAirportStub
 {
+
+    private static ClientCom clientCom;
+
 
     /*                                  CONSTRUCTOR                                    */
     /*---------------------------------------------------------------------------------*/
@@ -24,17 +28,16 @@ public class DepartureAirportStub
     public DepartureAirportStub( /*GeneralRep repos */) { }
 
 
-
-    /*                                   HOSTESS                                       */
-    /*---------------------------------------------------------------------------------*/
-
     /**
+     *  Operation to performe a client communication with server
      *
-     * @return true if the passenger queue is empty
+     *  It is called by each method of this class
+     *
+     * @return ClientCom object
      */
-    public boolean empty() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
+    public ClientCom Communication()
+    {
+        clientCom = new ClientCom(RunParameters.PlaneHostName, RunParameters.PlanePort);
 
         while( !clientCom.open() )
         {
@@ -44,6 +47,19 @@ public class DepartureAirportStub
                 Thread.currentThread().interrupt();
             }
         }
+        return clientCom;
+    }
+
+
+    /*                                   HOSTESS                                       */
+    /*---------------------------------------------------------------------------------*/
+
+    /**
+     *
+     * @return true if the passenger queue is empty
+     */
+    public boolean empty() {
+        clientCom = Communication();
 
         Hostess hostess = (Hostess) Thread.currentThread();
 
@@ -70,17 +86,7 @@ public class DepartureAirportStub
      * @return the number of passengers that have been checked
      */
     public int getnPassengers() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         Hostess hostess = (Hostess) Thread.currentThread();
 
@@ -109,17 +115,7 @@ public class DepartureAirportStub
      *
      */
     public void checkDocuments() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         System.out.println("PILOT: Plane is ready for boarding");
         Hostess hostess = (Hostess) Thread.currentThread();
@@ -146,35 +142,23 @@ public class DepartureAirportStub
      *
      */
     public void waitForNextPassenger() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
+        clientCom = Communication();
 
-        /* while (passengerQueue.empty()) */
-        while( !clientCom.open() )
-        {
-            try
-            {
-                Thread.sleep(1000);
-            } catch(InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+        System.out.println("HOSTESS: Waiting for passenger on Queue");
+        Hostess hostess = (Hostess) Thread.currentThread();
 
-            System.out.println("HOSTESS: Waiting for passenger on Queue");
-            Hostess hostess = (Hostess) Thread.currentThread();
+        Message pkt = new Message();
 
-            Message pkt = new Message();
+        pkt.setType(MessageType.WAIT_FOR_NEXT_PASSENGER);
+        pkt.setId( hostess.getId() );
+        pkt.setHostState( hostess.gethState() );
 
-            pkt.setType(MessageType.WAIT_FOR_NEXT_PASSENGER);
-            pkt.setId( hostess.getId() );
-            pkt.setHostState( hostess.gethState() );
+        clientCom.writeObject(pkt);
 
-            clientCom.writeObject(pkt);
+        pkt = (Message) clientCom.readObject();
+        hostess.sethState( pkt.getHostState() );
 
-            pkt = (Message) clientCom.readObject();
-            hostess.sethState( pkt.getHostState() );
-            clientCom.close();
-
-        }
+        clientCom.close();
     }
 
     /**
@@ -184,31 +168,24 @@ public class DepartureAirportStub
      *
      */
     public void waitForNextFlight() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )                            /* Enquanto a comunicação não estiver estabelecida, aguarda */
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         System.out.println("HOSTESS: Waiting for next flight");
         Hostess hostess = (Hostess) Thread.currentThread();   /* Caso comunicação estabelecida, busca o thread atual */
 
         Message pkt = new Message();
+
         /* Send Message */
         pkt.setType(MessageType.WAIT_FOR_NEXT_FLIGHT);        /* Tipo de mensagem */
         pkt.setId( hostess.getId() );                         /* Id da thread */
         pkt.setHostState(hostess.gethState());                /* Estado atual da thread */
 
         clientCom.writeObject(pkt);                           /* Escreve o objeto na mensagem */
+
         /* Receive Message */
         pkt = (Message) clientCom.readObject();               /* Recebe uma mensagem do servidor */
         hostess.sethState( pkt.getHostState() );              /* Atualiza o estado caso tenha mudado */
+
         clientCom.close();                                    /* Encerra a comunicação */
     }
 
@@ -223,17 +200,7 @@ public class DepartureAirportStub
      *
      */
     public void waitInQueue() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         System.out.println("PILOT: Plane is ready for boarding");
         Passenger passenger = (Passenger) Thread.currentThread();
@@ -261,22 +228,13 @@ public class DepartureAirportStub
      */
     /* TODO : Possivelmente nao sera necessario este metodo aqui*/
     public void showDocuments() {
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )                            /* Enquanto a comunicação não estiver estabelecida, aguarda */
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         Passenger passenger = (Passenger) Thread.currentThread();
         System.out.println("PASSENGER "+ passenger.getpId() +": Shows documents");
 
-
         Message pkt = new Message();
+
         pkt.setType(MessageType.SHOW_DOCUMENTS);
         pkt.setId( passenger.getpId() );                               /* Envia como parametro o ID da Thread Passenger */
         pkt.setPassengerState( passenger.getpState() );                /* Estado atual da thread */
@@ -301,18 +259,7 @@ public class DepartureAirportStub
      */
     public void informPlaneReadyForBoarding() {
         /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        /* readyForBoardig = true; */
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         System.out.println("PILOT: Plane is ready for boarding");
         Pilot pilot = (Pilot) Thread.currentThread();
@@ -336,17 +283,7 @@ public class DepartureAirportStub
      * It's called by the pilot to park the plane at the transfer gate
      */
     public void parkAtTransferGate() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
-
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        clientCom = Communication();
 
         System.out.println("PILOT: Plane is ready for boarding");
         Pilot pilot = (Pilot) Thread.currentThread();
