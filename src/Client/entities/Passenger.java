@@ -55,7 +55,7 @@ public class Passenger extends Thread {
         this.depAirStub = depAirStub;
         this.destAirStub = destAirStub;
         this.planeStub = planeStub;
-        this.pState = Passenger.States.GOING_TO_AIRPORT;
+        this.pState = Common.States.Passenger.GOING_TO_AIRPORT;
         this.pId = id;
     }
 
@@ -129,22 +129,22 @@ public class Passenger extends Thread {
         /**
          * The customer takes the bus to go to the departure airport.
          */
-        public static final int GOING_TO_AIRPORT = 0;
+//        public static final int GOING_TO_AIRPORT = 0;
 
         /**
          * The customer queue at the boarding gate waiting for the flight to be announced.
          */
-        public static final int IN_QUEUE = 1;
+//        public static final int IN_QUEUE = 1;
 
         /**
          * The customer flies to the destination airport.
          */
-        public static final int IN_FLIGHT = 2;
+//        public static final int IN_FLIGHT = 2;
 
         /**
          * The customer arrives at the destination airport, disembarks and leaves the airport.
          */
-        public static final int AT_DESTINATION = 3;
+//        public static final int AT_DESTINATION = 3;
 
     }
 }
