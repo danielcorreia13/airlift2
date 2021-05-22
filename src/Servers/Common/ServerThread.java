@@ -19,10 +19,10 @@ public class ServerThread extends Thread{
 
     @Override
     public void run() {
-        Message msg = conn.readMessage();
+        Message msg = (Message) conn.readObject(); /* Cast do objeto recebido para Message */
         if (msg == null) return;
         Message send = proxy.handleRequest(msg);
-        conn.writeMessage(send);
+        conn.writeObject(send);
         conn.close();
     }
 }
