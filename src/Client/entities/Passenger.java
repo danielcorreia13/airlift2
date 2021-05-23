@@ -95,13 +95,13 @@ public class Passenger extends Thread {
         try {
             System.out.println("----------------Travel to airport" + getpId());
             travelToAirport();
-            sleep(300);
+            sleep(30);
             System.out.println("-----------------Wait in Queue" + getpId());
             depAirStub.waitInQueue();
             //depAirStub.showDocuments();
             System.out.println("-----------------Board the plane" + getpId());
             planeStub.boardThePlane();
-            sleep(450);
+//            sleep(450);
             System.out.println("-----------------Waiting" + getpId());
             planeStub.waitForEndOfFlight();
             System.out.println("-----------------Leave  the plane" + getpId());
@@ -119,36 +119,9 @@ public class Passenger extends Thread {
     public void travelToAirport()
     {
         try {
-            sleep((long) (1 + 2500 * Math.random()));
+            sleep((long) (1 + 250 * Math.random()));
         } catch (InterruptedException ignored) {
         }
     }
 
-
-    /**
-     * Definition of the internal states of the passenger during his life cycle.
-     */
-    public static final class States {
-
-        /**
-         * The customer takes the bus to go to the departure airport.
-         */
-//        public static final int GOING_TO_AIRPORT = 0;
-
-        /**
-         * The customer queue at the boarding gate waiting for the flight to be announced.
-         */
-//        public static final int IN_QUEUE = 1;
-
-        /**
-         * The customer flies to the destination airport.
-         */
-//        public static final int IN_FLIGHT = 2;
-
-        /**
-         * The customer arrives at the destination airport, disembarks and leaves the airport.
-         */
-//        public static final int AT_DESTINATION = 3;
-
-    }
 }

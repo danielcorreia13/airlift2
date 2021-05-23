@@ -75,11 +75,7 @@ public class Pilot extends Thread
      */
     public void run()
     {
-        try {
-            sleep(450);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         do {
             depAirStub.parkAtTransferGate();
             depAirStub.informPlaneReadyForBoarding();
@@ -135,41 +131,4 @@ public class Pilot extends Thread
         catch (InterruptedException ignored) {}
     }
 
-    /**
-     *    Definition of the internal states of the pilot during his life cycle.
-     */
-    public static final class States
-    {
-
-        /**
-         *   The plane is at transfer gate.
-         */
-//        public static final int AT_TRANSFER_GATE = 0;
-
-        /**
-         *   The pilot informs that the plane is ready for boarding.
-         */
-//        public static final int READY_FOR_BOARDING = 1;
-
-        /**
-         *   The pilot waits for the boarding to be complete.
-         */
-//        public static final int WAIT_FOR_BOARDING = 2;
-
-        /**
-         *   The pilot flies the plane to the destination airport.
-         */
-//        public static final int FLYING_FORWARD = 3;
-
-        /**
-         *   The pilot waits for the last passenger to exit the plane.
-         */
-//        public static final int DEBOARDING = 4;
-
-        /**
-         *   The pilot flies the plane back to the departure airport.
-         */
-//        public static final int FLYING_BACK = 5;
-
-    }
 }

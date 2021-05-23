@@ -71,11 +71,6 @@ public class Hostess extends Thread
     public void run()
     {
         int count = 0;
-        try {
-            sleep(450);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         do {
             depAirStub.waitForNextFlight();
 
@@ -118,34 +113,6 @@ public class Hostess extends Thread
         }
         catch (InterruptedException ignored) {}
 
-
-    }
-
-    /**
-     *    Definition of the internal states of the hostess during his life cycle.
-     */
-    public static final class States
-    {
-
-        /**
-         *   The hostess waits for the next flight.
-         */
-//        public static final int WAIT_FOR_NEXT_FLIGHT = 0;
-
-        /**
-         *   The hostess waits for a passenger to arrive.
-         */
-//        public static final int WAIT_FOR_PASSENGER = 1;
-
-        /**
-         *   The hostess checks the passenger's documents.
-         */
-//        public static final int CHECK_PASSENGER = 2;
-
-        /**
-         *   The hostess tells the pilot that all the passengers have boarded the plane.
-         */
-//        public static final int READY_TO_FLY = 3;
 
     }
 }

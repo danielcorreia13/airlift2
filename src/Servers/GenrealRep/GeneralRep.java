@@ -79,7 +79,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
 
 	  hostessState = WAIT_FOR_NEXT_FLIGHT;
 	  pilotState = AT_TRANSFER_GATE;
-	  flightId = 1;
+	  flightId = 0;
 	  nPassenger = 0;
 	  nPassFlight = new int[10];
 	  Arrays.fill(nPassFlight, 0);
@@ -218,6 +218,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
 			}
 
 		lineStatus.append("  ").append(nPassQueue).append("    ").append(nPassPlane).append("    ").append(nPassArrived);
+
 		if (hostessState == READY_TO_FLY){
 			if (nPassPlane > nPassFlight[flightId-1])
 				nPassFlight[flightId-1] = nPassPlane;
