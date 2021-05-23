@@ -1,4 +1,4 @@
-package Servers.DepartureAirport;
+package Servers.DestinationAirport;
 
 import Client.entities.Passenger;
 
@@ -9,25 +9,25 @@ import Servers.Common.ServerCom;
 
 import java.net.SocketTimeoutException;
 
-public class DepartureAirportMain {
+public class DestinationAirportMain {
 
     public static void main(String[] args)
     {
         GeneralRepStub generalRepStub = new GeneralRepStub();
 
-        DepartureAirport departureAirport = new DepartureAirport(generalRepStub);
+        DestinationAirport destinationAirport = new DestinationAirport(generalRepStub);
 
-        DepartureAirportInterface departureAirportInterface = new DepartureAirportInterface(departureAirport);
+        DestinationAirportInterface destinationAirportInterface = new DestinationAirportInterface(destinationAirport);
 
         ServerCom scon, sconi;
 
-        scon =  new ServerCom(RunParameters.DepartureAirportPort);
+        scon =  new ServerCom(RunParameters.DestinationAirportPort);
         scon.start();
-        DepartureAirportClientProxy proxy;
+        DestinationAirportClientProxy proxy;
         while(true){
             try{
                 sconi = scon.accept ();
-                proxy = new DepartureAirportClientProxy(sconi,departureAirportInterface);
+                proxy = new DestinationAirportClientProxy(sconi,destinationAirportInterface);
                 proxy.start();
             }catch (SocketTimeoutException e) {}
         }

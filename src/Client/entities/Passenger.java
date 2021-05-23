@@ -94,11 +94,11 @@ public class Passenger extends Thread {
     public void run() {
         try {
             travelToAirport();
-            sleep(30);
+            sleep(300);
             depAirStub.waitInQueue();
-
+            depAirStub.showDocuments();
             planeStub.boardThePlane();
-            sleep(45);
+            sleep(450);
             planeStub.waitForEndOfFlight();
 
             destAirStub.leaveThePlane();
@@ -115,7 +115,7 @@ public class Passenger extends Thread {
     public void travelToAirport()
     {
         try {
-            sleep((long) (1 + 250 * Math.random()));
+            sleep((long) (1 + 2500 * Math.random()));
         } catch (InterruptedException ignored) {
         }
     }

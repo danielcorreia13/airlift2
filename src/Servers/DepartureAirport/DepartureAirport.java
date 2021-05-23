@@ -233,15 +233,7 @@ public class DepartureAirport
             }
         }
 
-        showDocuments();
 
-        while (!canBoard[passId]){
-            try{
-                wait();
-            }catch (InterruptedException ignored){
-
-            }
-        }
         //nPassengers++;
     }
 
@@ -259,6 +251,14 @@ public class DepartureAirport
         showDocuments[passId] = false;
 //        System.out.println("PASSENGER "+ passId +": Shows documents");
         notifyAll();
+
+        while (!canBoard[passId]){
+            try{
+                wait();
+            }catch (InterruptedException ignored){
+
+            }
+        }
     }
 
 

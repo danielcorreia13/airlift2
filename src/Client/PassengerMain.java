@@ -51,6 +51,7 @@ public class PassengerMain
         }
 
         for (Passenger p : passenger){
+
             p.start();
         }
 

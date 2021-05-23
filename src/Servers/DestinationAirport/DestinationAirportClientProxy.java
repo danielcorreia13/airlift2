@@ -2,8 +2,15 @@ package Servers.DestinationAirport;
 
 import Common.Message;
 import Servers.Common.ServerCom;
+import Servers.DepartureAirport.DepartureAirportClientProxy;
 
 public class DestinationAirportClientProxy extends Thread{
+
+    /**
+     *  Number of instantiayed threads.
+     */
+
+    private static int nProxy = 0;
 
     private final ServerCom conn;
 
@@ -54,18 +61,38 @@ public class DestinationAirportClientProxy extends Thread{
     }
 
 
-    public DestinationAirportClientProxy(String name, ServerCom conn, DestinationAirportInterface destinationAirport) {
-        super(name);
+    public DestinationAirportClientProxy(ServerCom conn, DestinationAirportInterface destinationAirport) {
+        super ("DestinationAirport_" + DestinationAirportClientProxy.getProxyId ());
         this.conn = conn;
         this.destinationAirport = destinationAirport;
     }
 
     @Override
     public void run() {
-        Message msg = conn.readMessage();
+        Message msg = (Message) conn.readObject();
         if (msg == null) return;
         Message send = destinationAirport.handleRequest(msg);
-        conn.writeMessage(send);
+        conn.writeObject(send);
         conn.close();
+    }
+
+    private static int getProxyId ()
+    {
+        Class<?> cl = null;
+        int proxyId;
+
+        try
+        { cl = Class.forName ("Servers.DestinationAirport.DestinationAirportClientProxy");
+        }
+        catch (ClassNotFoundException e)
+        { System.err.println ("Class was not found!");
+            e.printStackTrace ();
+            System.exit (1);
+        }
+        synchronized (cl)
+        { proxyId = nProxy;
+            nProxy += 1;
+        }
+        return proxyId;
     }
 }

@@ -4,6 +4,8 @@ import Common.*;
 import Servers.Common.*;
 import Servers.DepartureAirport.DepartureAirportClientProxy;
 
+import static Common.MessageType.OK;
+
 
 public class DestinationAirportInterface{
 
@@ -16,9 +18,10 @@ public class DestinationAirportInterface{
     public Message handleRequest(Message request) {
 
 
-        System.out.print("Received request: " + request.getType());
+        System.out.println("Received request: " + request.getType());
 
         Message reply = new Message();
+        reply.setType(OK);
 
         DestinationAirportClientProxy proxy = (DestinationAirportClientProxy) Thread.currentThread();
         proxy.setEntityState(request.getState());

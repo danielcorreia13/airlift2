@@ -79,7 +79,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
 
 	  hostessState = WAIT_FOR_NEXT_FLIGHT;
 	  pilotState = AT_TRANSFER_GATE;
-	  flightId = 0;
+	  flightId = 1;
 	  nPassenger = 0;
 	  nPassFlight = new int[10];
 	  Arrays.fill(nPassFlight, 0);

@@ -3,6 +3,8 @@ package Servers.Plane;
 import Client.stubs.GeneralRepStub;
 import Servers.Common.GeneralRep;
 
+import javax.swing.plaf.synth.SynthTabbedPaneUI;
+
 import static Common.States.Passenger.*;
 import static Common.States.Pilot.*;
 import static Common.States.Hostess.*;
@@ -141,7 +143,7 @@ public class Plane
      */
     public synchronized void boardThePlane()
     {
-
+        System.out.println("BOARD THE PLANE");
         int passId = ((PlaneClientProxy) Thread.currentThread()).getPassId();
         ((PlaneClientProxy) Thread.currentThread()).setEntityState(IN_FLIGHT);
         generalRep.setPassengerState(passId, IN_FLIGHT);

@@ -2,8 +2,15 @@ package Servers.Plane;
 
 import Common.Message;
 import Servers.Common.ServerCom;
+import Servers.GenrealRep.GeneralRepClientProxy;
 
 public class PlaneClientProxy extends Thread{
+
+    /**
+     *  Number of instantiayed threads.
+     */
+
+    private static int nProxy = 0;
 
     private final ServerCom conn;
 
@@ -54,18 +61,38 @@ public class PlaneClientProxy extends Thread{
         this.entityState = entityState;
     }
 
-    public PlaneClientProxy(String name, ServerCom conn, PlaneInterface plane) {
-        super(name);
+    public PlaneClientProxy(ServerCom conn, PlaneInterface plane) {
+        super ("Plane_" + PlaneClientProxy.getProxyId ());
         this.conn = conn;
         this.plane = plane;
     }
 
     @Override
     public void run() {
-        Message msg = conn.readMessage();
+        Message msg = (Message) conn.readObject();
         if (msg == null) return;
         Message send = plane.handleRequest(msg);
-        conn.writeMessage(send);
+        conn.writeObject(send);
         conn.close();
+    }
+
+    private static int getProxyId ()
+    {
+        Class<?> cl = null;
+        int proxyId;
+
+        try
+        { cl = Class.forName ("Servers.Plane.PlaneClientProxy");
+        }
+        catch (ClassNotFoundException e)
+        { System.err.println ("Class was not found!");
+            e.printStackTrace ();
+            System.exit (1);
+        }
+        synchronized (cl)
+        { proxyId = nProxy;
+            nProxy += 1;
+        }
+        return proxyId;
     }
 }

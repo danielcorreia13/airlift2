@@ -1,6 +1,7 @@
 package Servers.Plane;
 
 import Common.Message;
+import static Common.MessageType.*;
 import Servers.DepartureAirport.DepartureAirportClientProxy;
 
 public class PlaneInterface{
@@ -12,10 +13,10 @@ public class PlaneInterface{
     }
 
     public Message handleRequest(Message request) {
-        System.out.print("Received request: " + request.getType());
+        System.out.println("Received request: " + request.getType());
 
         Message reply = new Message();
-
+        reply.setType(OK);
         PlaneClientProxy proxy = (PlaneClientProxy) Thread.currentThread();
         proxy.setEntityState(request.getState());
 
@@ -30,7 +31,9 @@ public class PlaneInterface{
                 plane.waitForEndOfFlight();
                 break;
             case BOARD_THE_PLANE:
+                System.out.println("Calling board the plane");
                 plane.boardThePlane();
+                System.out.println("board the plane returned");
                 break;
             case WAIT_FOR_ALL_IN_BOARD:
                 int ret = plane.waitForAllInBoard();
@@ -39,7 +42,7 @@ public class PlaneInterface{
         }
 
         reply.setState(proxy.getEntityState());
-
+        System.out.println("Replayed to request: " + request.getType());
         return reply;
 
     }

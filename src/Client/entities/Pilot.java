@@ -75,6 +75,11 @@ public class Pilot extends Thread
      */
     public void run()
     {
+        try {
+            sleep(450);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         do {
             depAirStub.parkAtTransferGate();
             depAirStub.informPlaneReadyForBoarding();

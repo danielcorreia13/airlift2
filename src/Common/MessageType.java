@@ -22,6 +22,12 @@ public enum MessageType
      * General Repository types
      */
 
-    PASSENGER_STATE, PILOT_STATE, HOSTESS_STATE, NEXT_FLIGHT, WRITE_LOG, END_REPORT
+    PASSENGER_STATE, PILOT_STATE, HOSTESS_STATE, NEXT_FLIGHT, WRITE_LOG, END_REPORT,
+
+    /**
+     * Control types
+     */
+
+    OK
 
 }

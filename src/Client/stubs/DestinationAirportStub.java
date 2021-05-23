@@ -14,7 +14,7 @@ import Common.RunParameters;
 public class DestinationAirportStub
 {
 
-    private static ClientCom clientCom;
+//    private static ClientCom clientCom;
 
     /*                                 CONSTRUCTOR                                   */
     /*-------------------------------------------------------------------------------*/
@@ -32,7 +32,7 @@ public class DestinationAirportStub
      */
     public ClientCom Communication()
     {
-        clientCom = new ClientCom(RunParameters.DestinationAirportHostName, RunParameters.DestinationAirportPort);
+        ClientCom clientCom = new ClientCom(RunParameters.DestinationAirportHostName, RunParameters.DestinationAirportPort);
 
         while( !clientCom.open() )
         {
@@ -55,7 +55,7 @@ public class DestinationAirportStub
      *
      */
     public void leaveThePlane() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
         while( !clientCom.open() )
         {
@@ -95,7 +95,7 @@ public class DestinationAirportStub
      *  @param nPass number of passengers in the plane
      */
     public void announceArrival(int nPass) {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
         while( !clientCom.open() )
         {
@@ -131,7 +131,7 @@ public class DestinationAirportStub
      * @return number of total transported passengers
      */
     public int getTotalPassengers() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
         while( !clientCom.open() )
         {

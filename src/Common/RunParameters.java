@@ -24,10 +24,12 @@ public class RunParameters
      */
     public static final String logFile = "log_" + new Date().toString().replace(' ', '_') + ".txt";
 
+    public static final int base_port = 22000;
+
     /**
      * Departure Airport Port
      */
-    public static final int DepartureAirportPort = 22400;
+    public static final int DepartureAirportPort = base_port+1;
 
     /**
      * Departure Airport Hostname
@@ -37,7 +39,7 @@ public class RunParameters
     /**
      * Destination Airport Port
      */
-    public static final int DestinationAirportPort = 22401;
+    public static final int DestinationAirportPort = base_port+2;
 
     /**
      * Destination Airport Hostname
@@ -47,7 +49,7 @@ public class RunParameters
     /**
      * Plane Port
      */
-    public static final int PlanePort = 22402;
+    public static final int PlanePort = base_port+3;
 
     /**
      * Plane Hostname
@@ -57,7 +59,7 @@ public class RunParameters
     /**
      * Repository Port
      */
-    public static final int RepositoryPort = 22403;
+    public static final int RepositoryPort = base_port+4;
 
     /**
      * Repository Hostname

@@ -14,7 +14,7 @@ import Common.RunParameters;
 public class DepartureAirportStub
 {
 
-    private static ClientCom clientCom;
+    //private static ClientCom clientCom;
 
 
     /*                                  CONSTRUCTOR                                    */
@@ -35,7 +35,7 @@ public class DepartureAirportStub
      */
     public ClientCom Communication()
     {
-        clientCom = new ClientCom(RunParameters.PlaneHostName, RunParameters.PlanePort);
+        ClientCom clientCom = new ClientCom(RunParameters.DepartureAirportHostName, RunParameters.DepartureAirportPort);
 
         while( !clientCom.open() )
         {
@@ -57,7 +57,7 @@ public class DepartureAirportStub
      * @return true if the passenger queue is empty
      */
     public boolean empty() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
         Hostess hostess = (Hostess) Thread.currentThread();
 
@@ -83,10 +83,10 @@ public class DepartureAirportStub
      * @return the number of passengers that have been checked
      */
     public int getnPassengers() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
         Hostess hostess = (Hostess) Thread.currentThread();
-
+        System.out.println("Sending: HOSTESS: Get n Passengers");
         Message pkt = new Message();
 
         /* Send Message */
@@ -98,7 +98,7 @@ public class DepartureAirportStub
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
         hostess.sethState ( pkt.getState() );
-
+        System.out.println("Recieved: HOSTESS: Get n Passengers");
         clientCom.close();
 
         return pkt.getInt1(); /* Return to client int value received from server */
@@ -111,9 +111,9 @@ public class DepartureAirportStub
      *
      */
     public void checkDocuments() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
-        System.out.println("PILOT: Plane is ready for boarding");
+        System.out.println("Sending: Hostess: Check documents");
         Hostess hostess = (Hostess) Thread.currentThread();
 
         Message pkt = new Message();
@@ -138,9 +138,9 @@ public class DepartureAirportStub
      *
      */
     public void waitForNextPassenger() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
-        System.out.println("HOSTESS: Waiting for passenger on Queue");
+        System.out.println("Sending: HOSTESS: Waiting for passenger on Queue");
         Hostess hostess = (Hostess) Thread.currentThread();
 
         Message pkt = new Message();
@@ -164,9 +164,9 @@ public class DepartureAirportStub
      *
      */
     public void waitForNextFlight() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
-        System.out.println("HOSTESS: Waiting for next flight");
+        System.out.println("Sending: HOSTESS: Waiting for next flight");
         Hostess hostess = (Hostess) Thread.currentThread();   /* Caso comunicação estabelecida, busca o thread atual */
 
         Message pkt = new Message();
@@ -196,9 +196,9 @@ public class DepartureAirportStub
      *
      */
     public void waitInQueue() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
-        System.out.println("PILOT: Plane is ready for boarding");
+        System.out.println("Sending: Passenger " + ((Passenger)Thread.currentThread()).getpId() + " in queue");
         Passenger passenger = (Passenger) Thread.currentThread();
 
         Message pkt = new Message();
@@ -223,11 +223,11 @@ public class DepartureAirportStub
      *  It is called by the PASSENGER when he need to show his documents to the hostess
      *
      */
-    /* public void showDocuments() {
-        clientCom = Communication();
+     public void showDocuments() {
+         ClientCom clientCom = Communication();
 
         Passenger passenger = (Passenger) Thread.currentThread();
-        System.out.println("PASSENGER "+ passenger.getpId() +": Shows documents");
+        System.out.println("Sending: PASSENGER "+ passenger.getpId() +": Show documents");
 
         Message pkt = new Message();
 
@@ -241,7 +241,7 @@ public class DepartureAirportStub
         passenger.setpState( pkt.getState() );
 
         clientCom.close();
-    } */
+    }
 
 
     /*                                     PILOT                                       */
@@ -254,9 +254,9 @@ public class DepartureAirportStub
      *
      */
     public void informPlaneReadyForBoarding() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
-        System.out.println("PILOT: Plane is ready for boarding");
+        System.out.println("Sending: PILOT: Plane is ready for boarding");
         Pilot pilot = (Pilot) Thread.currentThread();
 
         Message pkt = new Message();
@@ -269,6 +269,7 @@ public class DepartureAirportStub
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
+        System.out.println("recieved: PILOT: Plane is ready for boarding");
         pilot.setPilotState( pkt.getState() );
 
         clientCom.close();
@@ -278,9 +279,9 @@ public class DepartureAirportStub
      * It's called by the pilot to park the plane at the transfer gate
      */
     public void parkAtTransferGate() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
 
-        System.out.println("PILOT: Plane is ready for boarding");
+        System.out.println("Sending: PILOT: Park at transfer gate");
         Pilot pilot = (Pilot) Thread.currentThread();
 
         Message pkt = new Message();

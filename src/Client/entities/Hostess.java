@@ -71,6 +71,11 @@ public class Hostess extends Thread
     public void run()
     {
         int count = 0;
+        try {
+            sleep(450);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         do {
             depAirStub.waitForNextFlight();
 

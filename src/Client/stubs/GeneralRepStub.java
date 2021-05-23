@@ -12,7 +12,7 @@ public class GeneralRepStub {
 
     public GeneralRepStub () { }
 
-    private static ClientCom clientCom;
+//    private static ClientCom clientCom;
 
     /**
      *  Operation to performe a client communication with server
@@ -23,7 +23,7 @@ public class GeneralRepStub {
      */
     public ClientCom Communication()
     {
-        clientCom = new ClientCom(RunParameters.PlaneHostName, RunParameters.PlanePort);
+        ClientCom clientCom = new ClientCom(RunParameters.RepositoryHostName, RunParameters.RepositoryPort);
 
         while( !clientCom.open() )
         {
@@ -44,7 +44,7 @@ public class GeneralRepStub {
      *     @param state passenger state
      */
     public void setPassengerState (int id, int state) {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
         Message pkt = new Message();
 
         /* Send Message */
@@ -65,7 +65,7 @@ public class GeneralRepStub {
      *     @param state pilot state
      */
     public void setPilotState (int state) {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
         Message pkt = new Message();
 
         /* Send Message */
@@ -85,7 +85,7 @@ public class GeneralRepStub {
      *	@param state hostess state
      */
     public void setHostess (int state) {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
         Message pkt = new Message();
 
         /* Send Message */
@@ -103,16 +103,16 @@ public class GeneralRepStub {
      *  Increment next id flight
      */
     public void nextFlight(){
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
         Message pkt = new Message();
-
+        System.out.println("Sending to rep: Pilot: next flight");
         /* Send Message */
         pkt.setType(MessageType.NEXT_FLIGHT);
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-
+//        System.out.println("recieved from rep: Pilot: next flight");
         clientCom.close();
     }
 
@@ -122,7 +122,7 @@ public class GeneralRepStub {
      *	@param msg message to write in log
      */
     public void writeLog(String msg) {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
         Message pkt = new Message();
 
         /* Send Message */
@@ -144,7 +144,7 @@ public class GeneralRepStub {
      *  Close the logging file
      */
     public void endReport() {
-        clientCom = Communication();
+        ClientCom clientCom = Communication();
         Message pkt = new Message();
 
         /* Send Message */

@@ -3,6 +3,8 @@ package Servers.DepartureAirport;
 import Common.Message;
 import Servers.Common.*;
 
+import static Common.MessageType.OK;
+
 
 public class DepartureAirportInterface{
 
@@ -14,9 +16,11 @@ public class DepartureAirportInterface{
     }
 
     public Message handleRequest(Message request) {
-        System.out.print("Received request: " + request.getType());
+        System.out.println("Received request: " + request.getType());
 
         Message reply = new Message();
+        reply.setType(OK);
+
         DepartureAirportClientProxy proxy = (DepartureAirportClientProxy) Thread.currentThread();
         proxy.setEntityState(request.getState());
         switch (request.getType()){
@@ -42,6 +46,9 @@ public class DepartureAirportInterface{
                 break;
             case PARK_AT_TRANSFER_GATE:
                 departureAirport.parkAtTransferGate();
+                break;
+            case GET_N_PASSENGERS:
+                reply.setInt1(departureAirport.getnPassengers());
                 break;
         }
         reply.setState(proxy.getEntityState());

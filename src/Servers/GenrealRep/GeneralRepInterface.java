@@ -3,6 +3,8 @@ package Servers.GenrealRep;
 import Common.*;
 import Servers.Common.*;
 
+import static Common.MessageType.OK;
+
 
 public class GeneralRepInterface{
 
@@ -15,9 +17,10 @@ public class GeneralRepInterface{
 
     public Message handleRequest(Message request) {
 
-        System.out.print("Received request: " + request.getType());
+        System.out.println("Received request: " + request.getType());
 
         Message reply = new Message();
+        reply.setType(OK);
 
         switch (request.getType()){
             case PASSENGER_STATE:
