@@ -49,7 +49,7 @@ public class Pilot extends Thread
         this.depAirStub = depAirStub;
         this.destAirStub = destAirStub;
         this.planeStub = planeStub;
-        this.pilotState = Pilot.States.AT_TRANSFER_GATE;
+        this.pilotState = Common.States.Pilot.AT_TRANSFER_GATE;
     }
 
     /**
@@ -137,32 +137,32 @@ public class Pilot extends Thread
         /**
          *   The plane is at transfer gate.
          */
-        public static final int AT_TRANSFER_GATE = 0;
+//        public static final int AT_TRANSFER_GATE = 0;
 
         /**
          *   The pilot informs that the plane is ready for boarding.
          */
-        public static final int READY_FOR_BOARDING = 1;
+//        public static final int READY_FOR_BOARDING = 1;
 
         /**
          *   The pilot waits for the boarding to be complete.
          */
-        public static final int WAIT_FOR_BOARDING = 2;
+//        public static final int WAIT_FOR_BOARDING = 2;
 
         /**
          *   The pilot flies the plane to the destination airport.
          */
-        public static final int FLYING_FORWARD = 3;
+//        public static final int FLYING_FORWARD = 3;
 
         /**
          *   The pilot waits for the last passenger to exit the plane.
          */
-        public static final int DEBOARDING = 4;
+//        public static final int DEBOARDING = 4;
 
         /**
          *   The pilot flies the plane back to the departure airport.
          */
-        public static final int FLYING_BACK = 5;
+//        public static final int FLYING_BACK = 5;
 
     }
 }

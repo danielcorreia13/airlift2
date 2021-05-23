@@ -22,10 +22,8 @@ public class DepartureAirportStub
 
     /**
      *  Departure Airport instantiation.
-     *
-     *    //@param repos reference to the general repository
      */
-    public DepartureAirportStub( /*GeneralRep repos */) { }
+    public DepartureAirportStub() { }
 
 
     /**
@@ -73,12 +71,11 @@ public class DepartureAirportStub
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        hostess.sethState ( pkt.getHostState() );
+        hostess.sethState ( pkt.getState() );
 
         clientCom.close();
 
-        /* TODO : Retornar o valor boolean*/
-        return false;
+        return pkt.getBool1(); /* Return to client boolean value received from server */
     }
 
     /**
@@ -100,12 +97,11 @@ public class DepartureAirportStub
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        hostess.sethState ( pkt.getHostState() );
+        hostess.sethState ( pkt.getState() );
 
         clientCom.close();
 
-        /* TODO : Retornar o numero de passageitros*/
-        return 0;
+        return pkt.getInt1(); /* Return to client int value received from server */
     }
 
     /**
@@ -130,7 +126,7 @@ public class DepartureAirportStub
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        hostess.sethState ( pkt.getHostState() );
+        hostess.sethState ( pkt.getState() );
 
         clientCom.close();
     }
@@ -156,7 +152,7 @@ public class DepartureAirportStub
         clientCom.writeObject(pkt);
 
         pkt = (Message) clientCom.readObject();
-        hostess.sethState( pkt.getHostState() );
+        hostess.sethState( pkt.getState() );
 
         clientCom.close();
     }
@@ -177,14 +173,14 @@ public class DepartureAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.WAIT_FOR_NEXT_FLIGHT);        /* Tipo de mensagem */
-//        pkt.setId( hostess.getId() );                         /* Id da thread */
+//        pkt.setId( hostess.getId() );                       /* Id da thread */
         pkt.setHostState(hostess.gethState());                /* Estado atual da thread */
 
         clientCom.writeObject(pkt);                           /* Escreve o objeto na mensagem */
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();               /* Recebe uma mensagem do servidor */
-        hostess.sethState( pkt.getHostState() );              /* Atualiza o estado caso tenha mudado */
+        hostess.sethState( pkt.getState() );                  /* Atualiza o estado caso tenha mudado */
 
         clientCom.close();                                    /* Encerra a comunicação */
     }
@@ -220,14 +216,14 @@ public class DepartureAirportStub
         clientCom.close();
     }
 
+    /* TODO : Possivelmente nao sera necessario este metodo aqui */
     /**
      *  Operation inform that the passenger is showing his documents
      *
      *  It is called by the PASSENGER when he need to show his documents to the hostess
      *
      */
-    /* TODO : Possivelmente nao sera necessario este metodo aqui*/
-    public void showDocuments() {
+    /* public void showDocuments() {
         clientCom = Communication();
 
         Passenger passenger = (Passenger) Thread.currentThread();
@@ -236,16 +232,16 @@ public class DepartureAirportStub
         Message pkt = new Message();
 
         pkt.setType(MessageType.SHOW_DOCUMENTS);
-        pkt.setId( passenger.getpId() );                               /* Envia como parametro o ID da Thread Passenger */
-        pkt.setState( passenger.getpState() );                /* Estado atual da thread */
+        pkt.setId( passenger.getpId() );
+        pkt.setState( passenger.getpState() );
 
-        clientCom.writeObject(pkt);                                    /* Escreve o objeto na mensagem */
+        clientCom.writeObject(pkt);
 
-        pkt = (Message) clientCom.readObject();                        /* Recebe uma mensagem do servidor */
-        passenger.setpState( pkt.getState() );                /* Atualiza o estado caso tenha mudado */
+        pkt = (Message) clientCom.readObject();
+        passenger.setpState( pkt.getState() );
 
         clientCom.close();
-    }
+    } */
 
 
     /*                                     PILOT                                       */
@@ -258,7 +254,6 @@ public class DepartureAirportStub
      *
      */
     public void informPlaneReadyForBoarding() {
-        /* TODO : Modificar locahost e portNumb */
         clientCom = Communication();
 
         System.out.println("PILOT: Plane is ready for boarding");

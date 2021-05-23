@@ -3,6 +3,7 @@ package Client.entities;
 import Client.stubs.DepartureAirportStub;
 import Client.stubs.PlaneStub;
 import Common.RunParameters;
+import Common.States;
 
 
 /**
@@ -42,7 +43,7 @@ public class Hostess extends Thread
         super(name);
         this.depAirStub = depAir;
         this.planeStub = plane;
-        this.hState = Hostess.States.WAIT_FOR_NEXT_FLIGHT;
+        this.hState = Common.States.Hostess.WAIT_FOR_NEXT_FLIGHT;
     }
 
     /**
@@ -122,22 +123,22 @@ public class Hostess extends Thread
         /**
          *   The hostess waits for the next flight.
          */
-        public static final int WAIT_FOR_NEXT_FLIGHT = 0;
+//        public static final int WAIT_FOR_NEXT_FLIGHT = 0;
 
         /**
          *   The hostess waits for a passenger to arrive.
          */
-        public static final int WAIT_FOR_PASSENGER = 1;
+//        public static final int WAIT_FOR_PASSENGER = 1;
 
         /**
          *   The hostess checks the passenger's documents.
          */
-        public static final int CHECK_PASSENGER = 2;
+//        public static final int CHECK_PASSENGER = 2;
 
         /**
          *   The hostess tells the pilot that all the passengers have boarded the plane.
          */
-        public static final int READY_TO_FLY = 3;
+//        public static final int READY_TO_FLY = 3;
 
     }
 }

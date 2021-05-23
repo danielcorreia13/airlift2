@@ -5,6 +5,7 @@ import Common.MessageType;
 import Client.communications.ClientCom;
 import Client.entities.Passenger;
 import Client.entities.Pilot;
+import Common.RunParameters;
 
 
 /**
@@ -12,14 +13,37 @@ import Client.entities.Pilot;
  */
 public class DestinationAirportStub
 {
+
+    private static ClientCom clientCom;
+
     /*                                 CONSTRUCTOR                                   */
     /*-------------------------------------------------------------------------------*/
     /**
      *  Destination Airport Stub instantiation.
-     *
-     *    //@param repos reference to the general repository
      */
-    public DestinationAirportStub ( /* GeneralRep repos */ ) { }
+    public DestinationAirportStub () { }
+
+    /**
+     *  Operation to performe a client communication with server
+     *
+     *  It is called by each method of this class
+     *
+     * @return ClientCom object
+     */
+    public ClientCom Communication()
+    {
+        clientCom = new ClientCom(RunParameters.DestinationAirportHostName, RunParameters.DestinationAirportPort);
+
+        while( !clientCom.open() )
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        return clientCom;
+    }
 
 
     /*                                 PASSENGER                                     */
@@ -31,8 +55,7 @@ public class DestinationAirportStub
      *
      */
     public void leaveThePlane() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
+        clientCom = Communication();
 
         while( !clientCom.open() )
         {
@@ -72,8 +95,7 @@ public class DestinationAirportStub
      *  @param nPass number of passengers in the plane
      */
     public void announceArrival(int nPass) {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
+        clientCom = Communication();
 
         while( !clientCom.open() )
         {
@@ -93,7 +115,7 @@ public class DestinationAirportStub
         pkt.setType(MessageType.ANNOUNCE_ARRIVAL);
 //        pkt.setId( pilot.getId());
         pkt.setState( pilot.getPilotState() );
-        pkt.setInt1(nPass);
+        pkt.setInt1(nPass);                    /* Send num of passenger to server */
         clientCom.writeObject(pkt);
 
         /* Receive Message */
@@ -109,8 +131,7 @@ public class DestinationAirportStub
      * @return number of total transported passengers
      */
     public int getTotalPassengers() {
-        /* TODO : Modificar locahost e portNumb */
-        ClientCom clientCom = new ClientCom("localhost", 4001);
+        clientCom = Communication();
 
         while( !clientCom.open() )
         {
@@ -137,7 +158,6 @@ public class DestinationAirportStub
 
         clientCom.close();
 
-        /* TODO: Retornar o numero de passageiros */
-        return 0;
+        return pkt.getInt1(); /* Return Total of Passengers received by server */
     }
 }

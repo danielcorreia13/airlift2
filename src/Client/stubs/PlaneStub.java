@@ -24,17 +24,11 @@ public class PlaneStub
 
     /**
      *  Plane Stub instantiation.
-     *
      */
-    public PlaneStub () {
-        /*generalRep = repos;
-        this.allInBoard = false;
-        setAtDestination(false);
-        this.nPassengers = 0;*/
-    }
+    public PlaneStub () { }
 
     /**
-     *  Operation to performe a client communication with server
+     *  Operation to perform a client communication with server
      *
      *  It is called by each method of this class
      *
@@ -42,7 +36,7 @@ public class PlaneStub
      */
     public ClientCom Communication()
     {
-        clientCom = new ClientCom(RunParameters.DepartureAirportHostName, RunParameters.DepartureAirportPort);
+        clientCom = new ClientCom(RunParameters.PlaneHostName, RunParameters.PlanePort);
         
         while( !clientCom.open() )
         {
@@ -84,10 +78,7 @@ public class PlaneStub
         clientCom.writeObject(pkt);
 
         pkt = (Message) clientCom.readObject();
-        hostess.sethState( pkt.getHostState() );
-
-        /*TODO : Atualizar no hostess o valor recebido do servidor*/
-        //hostess.setNPass( pkt.getInt1() );
+        hostess.sethState( pkt.getState() );
 
         clientCom.close();
     }
@@ -152,7 +143,7 @@ public class PlaneStub
 
         /* Send Message */
         pkt.setType(MessageType.BOARD_THE_PLANE);
-//        pkt.setId( passenger.getId() );
+        pkt.setId( passenger.getpId() );
 //        pkt.setPassengerState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
@@ -192,9 +183,6 @@ public class PlaneStub
         pkt = (Message) clientCom.readObject();
         pilot.setPilotState( pkt.getState() );
 
-        /*TODO : Atualizar o valor recebido do servidor */
-        //pilot.setAtDestination( pkt.getBool1() );
-
         clientCom.close();
     }
     /**
@@ -220,10 +208,9 @@ public class PlaneStub
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
         pilot.setPilotState( pkt.getState() );
-        int nPassengers = pkt.getInt1();
 
         clientCom.close();
 
-        return nPassengers;
+        return pkt.getInt1(); /* Return nPassengers */
     }
 }
