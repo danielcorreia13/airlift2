@@ -2,6 +2,10 @@ package Servers.DestinationAirport;
 
 import Client.stubs.GeneralRepStub;
 import Servers.Common.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static Common.States.Passenger.*;
 import static Common.States.Pilot.*;
 import static Common.States.Hostess.*;
@@ -67,17 +71,19 @@ public class DestinationAirport
     public synchronized void leaveThePlane() {
         int passId = ((DestinationAirportClientProxy) Thread.currentThread()).getPassId();
 
-        //System.out.println("PASSENGER " + passId + ": Left the plane");       
+        System.out.println("PASSENGER " + passId + ": Left the plane");
         ((DestinationAirportClientProxy) Thread.currentThread()).setEntityState(AT_DESTINATION);
         generalRep.setPassengerState(passId, AT_DESTINATION);
-        nPassengers--;
-        totalPassengers++;
+        this.nPassengers--;
+        this.totalPassengers++;
         //System.out.println(nPassengers);
         if (nPassengers == 0)
         {
-//            System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot");
-            notifyAll();
+            System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot " + nPassengers);
+
+
         }
+        notifyAll();
     }
 
 
@@ -95,27 +101,32 @@ public class DestinationAirport
 
         nPassengers = nPass;
 
-        //System.out.println("PILOT: Plane arrived at destination");
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        System.out.println(formatter.format(date) + " PILOT: Plane arrived at destination");
+
         ((DestinationAirportClientProxy) Thread.currentThread()).setEntityState(DEBOARDING);
         generalRep.writeLog("Arrived");
         generalRep.setPilotState(DEBOARDING);
 
         //System.out.println("    [!] Set destinanion flag at TRUE");
 
-        notifyAll();
 
-        //System.out.println("PILOT: Waiting for all passengers to leave the plane");
+
+        System.out.println("PILOT: Waiting for all passengers to leave the plane " + nPassengers);
         while ( nPassengers != 0)
         {
             try{
                 wait();
             }catch (InterruptedException ignored){}
         }
-
+        System.out.println("PILOT: Returning " + nPassengers);
         ((DestinationAirportClientProxy) Thread.currentThread()).setEntityState(FLYING_BACK);
         generalRep.writeLog("Returning");
         generalRep.setPilotState(FLYING_BACK);
 
         //System.out.println("\n\n    [!] Set destinanion flag at FALSE");
+
+        notifyAll();
     }
 }

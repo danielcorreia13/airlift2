@@ -16,22 +16,24 @@ public class DepartureAirportInterface{
     }
 
     public Message handleRequest(Message request) {
-        System.out.println("Received request: " + request.getType());
+        //System.out.println("Received request: " + request.getType());
+        //System.out.println("Received Client State: " + request.getState() );
 
         Message reply = new Message();
         reply.setType(OK);
 
         DepartureAirportClientProxy proxy = (DepartureAirportClientProxy) Thread.currentThread();
         proxy.setEntityState(request.getState());
+
         switch (request.getType()){
             case WAIT_IN_QUEUE:
                 proxy.setPassId(request.getId());
                 departureAirport.waitInQueue();
                 break;
-            case SHOW_DOCUMENTS:
+            /*case SHOW_DOCUMENTS:
                 proxy.setPassId(request.getId());
                 departureAirport.showDocuments();
-                break;
+                break;*/
             case WAIT_FOR_NEXT_PASSENGER:
                 departureAirport.waitForNextPassenger();
                 break;
@@ -51,6 +53,7 @@ public class DepartureAirportInterface{
                 reply.setInt1(departureAirport.getnPassengers());
                 break;
         }
+
         reply.setState(proxy.getEntityState());
 
         return reply;

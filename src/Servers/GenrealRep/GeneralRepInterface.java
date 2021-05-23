@@ -17,7 +17,8 @@ public class GeneralRepInterface{
 
     public Message handleRequest(Message request) {
 
-        System.out.println("Received request: " + request.getType());
+        //System.out.println("Received request: " + request.getType());
+        //System.out.println("ID:" + request.getId());
 
         Message reply = new Message();
         reply.setType(OK);
@@ -36,6 +37,7 @@ public class GeneralRepInterface{
                 generalRep.nextFlight();
                 break;
             case WRITE_LOG:
+                System.out.println("GETSTR: " + request.getStr());
                 generalRep.writeLog(request.getStr());
                 break;
             case END_REPORT:

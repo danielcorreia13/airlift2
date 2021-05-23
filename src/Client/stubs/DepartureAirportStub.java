@@ -66,7 +66,7 @@ public class DepartureAirportStub
         /* Send Message */
         pkt.setType(MessageType.CHECK_QUEUE_EMPTY);
 //        pkt.setId( hostess.getId() );
-        pkt.setHostState( hostess.gethState() );
+        pkt.setState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
@@ -92,7 +92,7 @@ public class DepartureAirportStub
         /* Send Message */
         pkt.setType(MessageType.GET_N_PASSENGERS);
 //        pkt.setId( hostess.getId() );
-        pkt.setHostState( hostess.gethState() );
+        pkt.setState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
@@ -121,7 +121,7 @@ public class DepartureAirportStub
         /* Send Message */
         pkt.setType(MessageType.CHECK_DOCUMENTS);
 //        pkt.setId( hostess.getId() );
-        pkt.setHostState( hostess.gethState() );
+        pkt.setState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
@@ -147,7 +147,7 @@ public class DepartureAirportStub
 
         pkt.setType(MessageType.WAIT_FOR_NEXT_PASSENGER);
 //        pkt.setId( hostess.getId() );
-        pkt.setHostState( hostess.gethState() );
+        pkt.setState( hostess.gethState() );
 
         clientCom.writeObject(pkt);
 
@@ -174,7 +174,7 @@ public class DepartureAirportStub
         /* Send Message */
         pkt.setType(MessageType.WAIT_FOR_NEXT_FLIGHT);        /* Tipo de mensagem */
 //        pkt.setId( hostess.getId() );                       /* Id da thread */
-        pkt.setHostState(hostess.gethState());                /* Estado atual da thread */
+        pkt.setState(hostess.gethState());                /* Estado atual da thread */
 
         clientCom.writeObject(pkt);                           /* Escreve o objeto na mensagem */
 
@@ -206,7 +206,7 @@ public class DepartureAirportStub
         /* Send Message */
         pkt.setType(MessageType.WAIT_IN_QUEUE);
         pkt.setId( passenger.getpId() );
-//        pkt.setState( passenger.getpState() );
+        pkt.setState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
@@ -223,7 +223,7 @@ public class DepartureAirportStub
      *  It is called by the PASSENGER when he need to show his documents to the hostess
      *
      */
-     public void showDocuments() {
+     /*public void showDocuments() {
          ClientCom clientCom = Communication();
 
         Passenger passenger = (Passenger) Thread.currentThread();
@@ -241,7 +241,7 @@ public class DepartureAirportStub
         passenger.setpState( pkt.getState() );
 
         clientCom.close();
-    }
+    }*/
 
 
     /*                                     PILOT                                       */
@@ -291,6 +291,7 @@ public class DepartureAirportStub
 //        pkt.setId( pilot.getId() );
         pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
+
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();

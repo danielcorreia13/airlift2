@@ -110,7 +110,7 @@ public class Pilot extends Thread
 //      System.out.println("=================================\n");
         try
         {
-            sleep ((long) (1 + 100 * Math.random ()));
+            sleep ((long) (1 + 300 * Math.random ()));
         }
         catch (InterruptedException ignored) {}
     }

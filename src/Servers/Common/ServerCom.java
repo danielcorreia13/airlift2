@@ -144,7 +144,7 @@ public class ServerCom
       }
       catch (SocketTimeoutException e)
       {
-          System.out.println ("SOCKET TIMEOUT");
+          //System.out.println ("SOCKET TIMEOUT");
           throw new SocketTimeoutException ("Listening timeout!");
       }
       catch (SocketException e)

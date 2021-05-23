@@ -74,7 +74,7 @@ public class DestinationAirportStub
         /* Send Message */
         pkt.setType(MessageType.LEAVE_PLANE);
         pkt.setId( passenger.getpId() );
-//        pkt.setState( passenger.getpState() );
+        pkt.setState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */

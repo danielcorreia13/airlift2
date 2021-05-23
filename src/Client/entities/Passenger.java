@@ -93,14 +93,18 @@ public class Passenger extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println("----------------Travel to airport" + getpId());
             travelToAirport();
             sleep(300);
+            System.out.println("-----------------Wait in Queue" + getpId());
             depAirStub.waitInQueue();
-            depAirStub.showDocuments();
+            //depAirStub.showDocuments();
+            System.out.println("-----------------Board the plane" + getpId());
             planeStub.boardThePlane();
             sleep(450);
+            System.out.println("-----------------Waiting" + getpId());
             planeStub.waitForEndOfFlight();
-
+            System.out.println("-----------------Leave  the plane" + getpId());
             destAirStub.leaveThePlane();
         } catch (InterruptedException e) {
             System.out.print("Something went wrong");

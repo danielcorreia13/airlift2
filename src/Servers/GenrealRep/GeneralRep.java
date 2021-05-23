@@ -147,6 +147,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
     *	@param msg message to write in log
     */
 	public synchronized void writeLog(String msg){
+		System.out.println("FINAL:" + msg);
     	log.println("\nFlight " + flightId + ": " + msg);
 	}
 	    
@@ -160,7 +161,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
     *  Passengers are going to airport
     *  Internal operation.
     */   
-   private void reportInitialStatus ()
+   private synchronized void reportInitialStatus ()
    {
 
       log.println ("\n\tAirlift - Description of the internal state:\n\n");
@@ -175,7 +176,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
     *  The current state of the passengers, pilot and hostess is organized in a line to be printed.
     *  Internal operation.
     */	   
-	private void reportStatus ()
+	private synchronized void reportStatus ()
 	{
 		int nPassQueue = 0;
 		int nPassPlane = 0;
@@ -228,7 +229,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
     /**
      *  Close the logging file
      */
-    public void endReport(){
+    public synchronized void endReport(){
     	log.println("\nAirlift sum up:");
 		for (int i = 0; i < nPassFlight.length; i++) {
 			if (nPassFlight[i] == 0) break;

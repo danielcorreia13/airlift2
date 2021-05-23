@@ -73,7 +73,7 @@ public class PlaneStub
         /* Send Message */
         pkt.setType(MessageType.INFORM_PLANE_READY_TAKEOFF);
 //        pkt.setId( hostess.getId() );
-        pkt.setHostState( hostess.gethState() );
+        pkt.setState( hostess.gethState() );
         pkt.setInt1(nPass);                                /* Enviar o parametro recebido na funcao */
         clientCom.writeObject(pkt);
 
@@ -117,7 +117,7 @@ public class PlaneStub
         /* Send Message */
         pkt.setType(MessageType.WAIT_END_FLIGHT);
         pkt.setId( passenger.getpId() );
-//        pkt.setPassengerState( passenger.getpState() );
+        pkt.setState( passenger.getpState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */

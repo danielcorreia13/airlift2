@@ -18,7 +18,7 @@ public class DestinationAirportInterface{
     public Message handleRequest(Message request) {
 
 
-        System.out.println("Received request: " + request.getType());
+        //System.out.println("Received request: " + request.getType());
 
         Message reply = new Message();
         reply.setType(OK);

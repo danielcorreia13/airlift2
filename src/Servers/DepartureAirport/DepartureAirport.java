@@ -51,6 +51,7 @@ public class DepartureAirport
     private final boolean[] canBoard;
 
 
+
     /*                                  CONSTRUCTOR                                    */
     /*---------------------------------------------------------------------------------*/
 
@@ -119,7 +120,7 @@ public class DepartureAirport
             System.exit(1);
         }
 
-//        System.out.println("HOSTESS: Passenger "+ passId +" is next on queue");
+        System.out.println("HOSTESS: Passenger "+ passId +" is next on queue");
 
         showDocuments[passId] = true;
 
@@ -131,15 +132,15 @@ public class DepartureAirport
 
         while (showDocuments[passId])
         {
-//        	System.out.println("HOSTESS: Checking passenger "+ passId +" documents");
+        	System.out.println("HOSTESS: Checking passenger "+ passId +" documents");
 
             try {
                 wait();
             } catch (InterruptedException ignored) {}
         }
 
-//        System.out.println("	HOSTESS: Passenger "+ passId +" documents checked!");
-//        System.out.println("		HOSTESS: Passenger "+ passId +" allowed to board");
+        System.out.println("	HOSTESS: Passenger "+ passId +" documents checked!");
+        System.out.println("		HOSTESS: Passenger "+ passId +" allowed to board");
 
         canBoard[passId] = true;
 
@@ -156,18 +157,20 @@ public class DepartureAirport
      */
     public synchronized void waitForNextPassenger()
     {
-//    	System.out.println("HOSTESS: Checking if queue not empty");
+    	System.out.println("HOSTESS: Checking if queue not empty");
         ((DepartureAirportClientProxy) Thread.currentThread()).setEntityState(WAIT_FOR_PASSENGER);
         generalRep.setHostess(WAIT_FOR_PASSENGER);
 
         while (passengerQueue.empty())
         {
-//        	System.out.println("HOSTESS: Waiting for next passenger");
+        	System.out.println("HOSTESS: Waiting for next passenger");
 
             try {
                 wait();
             } catch (InterruptedException ignored) {}
         }
+
+        System.out.println("HOSTESS: Passenger on Queue!");
     }
 
     /**
@@ -179,7 +182,7 @@ public class DepartureAirport
      */
     public synchronized void waitForNextFlight()
     {
-//        System.out.println("HOSTESS: Waiting for next flight");
+        System.out.println("HOSTESS: Waiting for next flight");
         ((DepartureAirportClientProxy) Thread.currentThread()).setEntityState(WAIT_FOR_NEXT_FLIGHT);
         generalRep.setHostess(WAIT_FOR_NEXT_FLIGHT);
         while (!readyForBoardig)
@@ -194,6 +197,8 @@ public class DepartureAirport
         ((DepartureAirportClientProxy) Thread.currentThread()).setEntityState(WAIT_FOR_PASSENGER);
 
         generalRep.setHostess(WAIT_FOR_PASSENGER);
+
+        notifyAll();
 
     }
 
@@ -214,7 +219,7 @@ public class DepartureAirport
         DepartureAirportClientProxy passenger = (DepartureAirportClientProxy) Thread.currentThread();
         passenger.setEntityState(IN_QUEUE);
         generalRep.setPassengerState(passId,IN_QUEUE);
-//        System.out.println("[!] PASSENGER " + passId + ": Arrived at departure airport");
+        System.out.println("[!] PASSENGER " + passId + ": Arrived at departure airport");
 
 
         try {
@@ -223,6 +228,7 @@ public class DepartureAirport
             System.err.println("Insertion of passenger in waiting queue failed: " + e.getMessage());
             System.exit(1);
         }
+
         notifyAll();
 
         while (!showDocuments[passId]){
@@ -233,7 +239,17 @@ public class DepartureAirport
             }
         }
 
+        showDocuments();
 
+        while (!canBoard[passId]){
+            try{
+                wait();
+            }catch (InterruptedException ignored){
+
+            }
+        }
+
+        notifyAll();
         //nPassengers++;
     }
 
@@ -246,19 +262,10 @@ public class DepartureAirport
      */
     public synchronized void showDocuments()
     {
-
         int passId = ((DepartureAirportClientProxy)Thread.currentThread()).getPassId();
         showDocuments[passId] = false;
-//        System.out.println("PASSENGER "+ passId +": Shows documents");
+        System.out.println("PASSENGER "+ passId +": Shows documents");
         notifyAll();
-
-        while (!canBoard[passId]){
-            try{
-                wait();
-            }catch (InterruptedException ignored){
-
-            }
-        }
     }
 
 
@@ -280,7 +287,7 @@ public class DepartureAirport
         ((DepartureAirportClientProxy) Thread.currentThread()).setEntityState(READY_FOR_BOARDING);
         generalRep.setPilotState(READY_FOR_BOARDING);
 
-//        System.out.println("PILOT: Plane is ready for boarding");
+        System.out.println("PILOT: Plane is ready for boarding");
         notifyAll();
     }
 
@@ -291,7 +298,7 @@ public class DepartureAirport
     public void parkAtTransferGate() {
         ((DepartureAirportClientProxy) Thread.currentThread()).setEntityState(AT_TRANSFER_GATE);
         generalRep.setPilotState(AT_TRANSFER_GATE);
-//        System.out.println("PILOT: Park transfer gate");
+        System.out.println("PILOT: Park transfer gate");
 
     }
 }

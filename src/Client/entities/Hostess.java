@@ -96,7 +96,9 @@ public class Hostess extends Thread
                     break;
                 }
                 count++;
+                System.out.println("Waiting for next passenger");
                 depAirStub.waitForNextPassenger();
+
                 depAirStub.checkDocuments();
             }
             planeStub.informPlaneIsReadyToTakeOff(depAirStub.getnPassengers());
