@@ -1,5 +1,6 @@
 package Servers.DestinationAirport;
 
+import Client.stubs.GeneralRepStub;
 import Servers.Common.*;
 import static Common.States.Passenger.*;
 import static Common.States.Pilot.*;
@@ -14,7 +15,7 @@ public class DestinationAirport
     /**
      * Reference to general repository
      */
-    private final GeneralRep generalRep;
+    private final GeneralRepStub generalRep;
 
     /**
      * Number of passengers
@@ -27,61 +28,61 @@ public class DestinationAirport
     private int totalPassengers;
 
 
-    
+
     /*                                 CONSTRUCTOR                                   */
-    /*-------------------------------------------------------------------------------*/ 
+    /*-------------------------------------------------------------------------------*/
     /**
      *  Destination Airport instantiation.
      *
      *    @param repos reference to the general repository
      */
-    public DestinationAirport(GeneralRep repos)
+    public DestinationAirport(GeneralRepStub repos)
     {
         this.generalRep = repos;
         this.nPassengers = 0;
         totalPassengers = 0;
     }
-    
+
     /**
      * Get number of total transported passengers
      *
      * @return number of total transported passengers
      */
-    public int getTotalPassengers() 
+    public int getTotalPassengers()
     {
         return totalPassengers;
     }
-    
-    
+
+
     /*                                 PASSENGER                                     */
-    /*-------------------------------------------------------------------------------*/ 
-   
+    /*-------------------------------------------------------------------------------*/
+
     /**
      *  Operation of passenger leaving the plane
      *
      *  It is called by the PASSENGER when he leaves the plane
      *
      *
-     */     
-	public synchronized int leaveThePlane(int passId) {
+     */
+    public synchronized void leaveThePlane() {
+        int passId = ((DestinationAirportClientProxy) Thread.currentThread()).getPassId();
 
-		//System.out.println("PASSENGER " + passId + ": Left the plane");
-		int state = AT_DESTINATION;
-		generalRep.setPassengerState(passId, AT_DESTINATION);
+        //System.out.println("PASSENGER " + passId + ": Left the plane");       
+        ((DestinationAirportClientProxy) Thread.currentThread()).setEntityState(AT_DESTINATION);
+        generalRep.setPassengerState(passId, AT_DESTINATION);
         nPassengers--;
         totalPassengers++;
         //System.out.println(nPassengers);
-        if (nPassengers == 0) 
+        if (nPassengers == 0)
         {
-            System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot");
+//            System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot");
             notifyAll();
         }
-        return state;
     }
 
 
     /*                                    PILOT                                      */
-    /*-------------------------------------------------------------------------------*/ 
+    /*-------------------------------------------------------------------------------*/
 
     /**
      *  Operation inform that plane reached the destionation
@@ -89,33 +90,32 @@ public class DestinationAirport
      *  It is called by the pilot when plane was landed
      *
      *  @param nPass number of passengers in the plane
-     */ 
-    public synchronized int announceArrival(int nPass) {
+     */
+    public synchronized void announceArrival(int nPass) {
 
         nPassengers = nPass;
-        
+
         //System.out.println("PILOT: Plane arrived at destination");
-        int state = DEBOARDING;
+        ((DestinationAirportClientProxy) Thread.currentThread()).setEntityState(DEBOARDING);
         generalRep.writeLog("Arrived");
         generalRep.setPilotState(DEBOARDING);
-        
+
         //System.out.println("    [!] Set destinanion flag at TRUE");
-        
+
         notifyAll();
-        
+
         //System.out.println("PILOT: Waiting for all passengers to leave the plane");
-        while ( nPassengers != 0) 
+        while ( nPassengers != 0)
         {
-            try{          	
+            try{
                 wait();
             }catch (InterruptedException ignored){}
         }
 
-        state = FLYING_BACK;
+        ((DestinationAirportClientProxy) Thread.currentThread()).setEntityState(FLYING_BACK);
         generalRep.writeLog("Returning");
         generalRep.setPilotState(FLYING_BACK);
 
         //System.out.println("\n\n    [!] Set destinanion flag at FALSE");
-        return state;
     }
 }

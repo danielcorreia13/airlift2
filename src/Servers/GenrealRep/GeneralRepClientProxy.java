@@ -1,27 +1,26 @@
-package Servers.Common;
+package Servers.GenrealRep;
 
 import Common.Message;
 import Servers.Common.ServerCom;
-import Servers.Common.ServerProxy;
 
-public class ServerThread extends Thread{
+public class GeneralRepClientProxy extends Thread{
 
     private final ServerCom conn;
 
-    private final ServerProxy proxy;
+    private final GeneralRepInterface generalRep;
 
 
-    public ServerThread(String name, ServerCom conn, ServerProxy proxy) {
+    public GeneralRepClientProxy(String name, ServerCom conn, GeneralRepInterface generalRep) {
         super(name);
         this.conn = conn;
-        this.proxy = proxy;
+        this.generalRep = generalRep;
     }
 
     @Override
     public void run() {
         Message msg = conn.readMessage();
         if (msg == null) return;
-        Message send = proxy.handleRequest(msg);
+        Message send = generalRep.handleRequest(msg);
         conn.writeMessage(send);
         conn.close();
     }

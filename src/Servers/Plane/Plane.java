@@ -1,5 +1,6 @@
 package Servers.Plane;
 
+import Client.stubs.GeneralRepStub;
 import Servers.Common.GeneralRep;
 
 import static Common.States.Passenger.*;
@@ -10,38 +11,38 @@ import static Common.States.Hostess.*;
  * Shared region : Plane
  */
 public class Plane
-{	
+{
     /**
      * Reference to general repository
      */
-    private final GeneralRep generalRep;
-    
+    private final GeneralRepStub generalRep;
+
     /**
      * All passengers on board flag
      */
     private boolean allInBoard;
-    
+
     /**
      * Number of passengers flag 
      */
     private int nPassengers;
-   
+
     /**
      * Plane at destination flag
      */
     private boolean atDestination;
 
     /*                                 CONSTRUCTOR                                   */
-    /*-------------------------------------------------------------------------------*/   
+    /*-------------------------------------------------------------------------------*/
 
     /**
      *  Plane instantiation.
      *
      *    @param repos reference to the general repository
      */
-    public Plane (GeneralRep repos) 
+    public Plane (GeneralRepStub repos)
     {
-    	generalRep = repos;
+        generalRep = repos;
         this.allInBoard = false;
         setAtDestination(false);
         this.nPassengers = 0;
@@ -49,7 +50,7 @@ public class Plane
 
     /*                                  HOSTESS                                      */
     /*-------------------------------------------------------------------------------*/
-    
+
     /**
      *  Operation inform that the plane is ready for take off
      *
@@ -58,8 +59,8 @@ public class Plane
      *  Or if maximum passengers on board was reached
      *  Or if number of passengers on board is between min and max, and departure queue is empty
      * @param nPass number of passengers that boarded the plane
-     */    
-    public synchronized int informPlaneIsReadyToTakeOff(int nPass)
+     */
+    public synchronized void informPlaneIsReadyToTakeOff(int nPass)
     {
         while (nPassengers != nPass){
             try{
@@ -67,68 +68,68 @@ public class Plane
             }catch (InterruptedException ignored){}
         }
 
-    	allInBoard = true;
-    	
-        int state = READY_TO_FLY;
+        allInBoard = true;
+
+        ((PlaneClientProxy) Thread.currentThread()).setEntityState(READY_TO_FLY);
         generalRep.setHostess(READY_TO_FLY);
         generalRep.writeLog("Departed with " + nPass + " passengers");
         //System.out.println("HOSTESS->PILOT: Plane is ready for takeoff");
-        
+
         notifyAll();
-        return state;
+
     }
 
-    
+
     /**
      *  Operation to set plane at destination
      *
      * It is called by pilot on destination point
      *
      * @param atDestination new value
-     */    
-	public synchronized void setAtDestination(boolean atDestination)
+     */
+    public synchronized void setAtDestination(boolean atDestination)
     {
-    	this.atDestination = atDestination;
-    	notifyAll();
+        this.atDestination = atDestination;
+        notifyAll();
     }
-    
+
     /**
      *  Operation inform that plane is at destination
      *
      *  It is called by the pilot to notify passengers that the plane was landed
      *
      * @return true if at destination
-     */ 
+     */
     public synchronized boolean isAtDestination()
     {
-    	return this.atDestination;
+        return this.atDestination;
     }
-    
+
     //                                  PASSENGER                                    //
     //---------------------------------------------------------------------------------
-    
+
     /**
      *  Operation inform that the passenger is waiting for the end of the flight
      *
      *  It is called by the PASSENGER when he is on the plane
      *
      *
-     */   
-    public synchronized void waitForEndOfFlight() 
+     */
+    public synchronized void waitForEndOfFlight()
     {
-    	
-//    	int passId = ((Passenger) Thread.currentThread()).getpId();
-    	//System.out.println("[!] PASSENGER "+ passId +": Waiting for the end of the flight");
-    		
-    	while ( !isAtDestination() )
-    	{
-    		try {
-    			wait();
-    		} catch (InterruptedException ignored) {}
-    	}
-    	    	
-    	notifyAll();
-    	    	
+
+//    	int passId = ((PlaneClientProxy) Thread.currentThread()).getPassId();
+        //System.out.println("[!] PASSENGER "+ passId +": Waiting for the end of the flight");
+
+        while ( !isAtDestination() )
+        {
+            try {
+                wait();
+            } catch (InterruptedException ignored) {}
+        }
+
+        notifyAll();
+
     }
 
     /**
@@ -138,48 +139,45 @@ public class Plane
      *
      *
      */
-    public synchronized int boardThePlane(int passId)
+    public synchronized void boardThePlane()
     {
 
-        int state = IN_FLIGHT;
+        int passId = ((PlaneClientProxy) Thread.currentThread()).getPassId();
+        ((PlaneClientProxy) Thread.currentThread()).setEntityState(IN_FLIGHT);
         generalRep.setPassengerState(passId, IN_FLIGHT);
         //System.out.println("PASSENGER "+passId+ ": Seated on plane");
         nPassengers++;
         notifyAll();
-        return state;
     }
-    
-    
+
+
     //                                   PILOT                                      //
     //--------------------------------------------------------------------------------
-    
+
     /**
      *  Operation inform that PILOT is waiting for the hostess signal, indicating that all passengers are on board.
      *
      *  It is called by the PILOT while waiting for all passengers on board
      *
      *    @return void
-     */   
-    public synchronized int[] waitForAllInBoard()
+     */
+    public synchronized int waitForAllInBoard()
     {
-    	//System.out.println("PILOT: Waiting for all passengers on board");
+        //System.out.println("PILOT: Waiting for all passengers on board");
         nPassengers = 0;
 
-//        int state = WAIT_FOR_BOARDING;
-    	generalRep.setPilotState(WAIT_FOR_BOARDING);
-    	try 
-    	{
+        ((PlaneClientProxy) Thread.currentThread()).setEntityState(WAIT_FOR_BOARDING);
+        generalRep.setPilotState(WAIT_FOR_BOARDING);
+        try
+        {
             while( !allInBoard)
-    			wait();
-    	}
-    	catch (InterruptedException ignored) {}
-    	allInBoard = false;
-        int state = FLYING_FORWARD;
+                wait();
+        }
+        catch (InterruptedException ignored) {}
+        allInBoard = false;
+        ((PlaneClientProxy) Thread.currentThread()).setEntityState(FLYING_FORWARD);
 
         generalRep.setPilotState(FLYING_FORWARD);
-        int[] ret = new int[2];
-        ret[0] = nPassengers;
-        ret[1] = state;
-    	return ret;
+        return nPassengers;
     }
 }

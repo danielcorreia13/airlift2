@@ -4,15 +4,15 @@ import Common.*;
 import Servers.Common.*;
 
 
-public class GeneralRepProxy implements ServerProxy{
+public class GeneralRepInterface{
 
     private final GeneralRep generalRep;
 
-    public GeneralRepProxy(GeneralRep generalRep) {
+    public GeneralRepInterface(GeneralRep generalRep) {
         this.generalRep = generalRep;
     }
 
-    @Override
+
     public Message handleRequest(Message request) {
 
         System.out.print("Received request: " + request.getType());

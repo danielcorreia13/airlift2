@@ -4,48 +4,47 @@ import Common.Message;
 import Servers.Common.*;
 
 
-public class DepartureAirportProxy implements ServerProxy {
+public class DepartureAirportInterface{
 
     private final DepartureAirport departureAirport;
 
-    public DepartureAirportProxy(DepartureAirport departureAirport){
+    public DepartureAirportInterface(DepartureAirport departureAirport){
 
         this.departureAirport = departureAirport;
     }
 
-
-    @Override
     public Message handleRequest(Message request) {
         System.out.print("Received request: " + request.getType());
 
         Message reply = new Message();
-        int state = -1;
+        DepartureAirportClientProxy proxy = (DepartureAirportClientProxy) Thread.currentThread();
+        proxy.setEntityState(request.getState());
         switch (request.getType()){
             case WAIT_IN_QUEUE:
-                state = departureAirport.waitInQueue(request.getId());
+                proxy.setPassId(request.getId());
+                departureAirport.waitInQueue();
                 break;
             case SHOW_DOCUMENTS:
-                departureAirport.showDocuments(request.getId());
+                proxy.setPassId(request.getId());
+                departureAirport.showDocuments();
                 break;
             case WAIT_FOR_NEXT_PASSENGER:
-                state = departureAirport.waitForNextPassenger();
+                departureAirport.waitForNextPassenger();
                 break;
             case CHECK_DOCUMENTS:
-                state = departureAirport.checkDocuments();
+                departureAirport.checkDocuments();
                 break;
             case WAIT_FOR_NEXT_FLIGHT:
-                state = departureAirport.waitForNextFlight();
+                departureAirport.waitForNextFlight();
                 break;
             case INFORM_PLANE_READY_BOARDING:
-                state = departureAirport.informPlaneReadyForBoarding();
+                departureAirport.informPlaneReadyForBoarding();
                 break;
             case PARK_AT_TRANSFER_GATE:
                 departureAirport.parkAtTransferGate();
                 break;
         }
-        if (state != -1){
-            reply.setState(state);
-        }
+        reply.setState(proxy.getEntityState());
 
         return reply;
 
