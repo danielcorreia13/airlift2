@@ -301,4 +301,16 @@ public class DepartureAirport
         System.out.println("PILOT: Park transfer gate");
 
     }
+
+    /**
+     *   Operation server shutdown.
+     *
+     *   New operation.
+     */
+
+    public synchronized void shutdown ()
+    {
+        DepartureAirportMain.shutdown = true;
+        notifyAll ();                                        // the barber may now terminate
+    }
 }

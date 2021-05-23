@@ -43,6 +43,7 @@ public class GeneralRepInterface{
             case END_REPORT:
                 generalRep.endReport();
                 break;
+
         }
 
         return reply;

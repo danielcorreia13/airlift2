@@ -52,6 +52,9 @@ public class DepartureAirportInterface{
             case GET_N_PASSENGERS:
                 reply.setInt1(departureAirport.getnPassengers());
                 break;
+            case SHUT:
+                departureAirport.shutdown();
+                break;
         }
 
         reply.setState(proxy.getEntityState());

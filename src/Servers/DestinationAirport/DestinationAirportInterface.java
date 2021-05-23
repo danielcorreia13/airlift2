@@ -18,7 +18,7 @@ public class DestinationAirportInterface{
     public Message handleRequest(Message request) {
 
 
-        //System.out.println("Received request: " + request.getType());
+        System.out.println("Received request: " + request.getType());
 
         Message reply = new Message();
         reply.setType(OK);
@@ -34,6 +34,9 @@ public class DestinationAirportInterface{
                 break;
             case ANNOUNCE_ARRIVAL:
                 destinationAirport.announceArrival(request.getInt1());
+                break;
+            case GET_TOTAL_PASSENGERS:
+                reply.setInt1(destinationAirport.getTotalPassengers());
                 break;
         }
 

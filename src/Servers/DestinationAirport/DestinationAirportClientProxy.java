@@ -4,6 +4,9 @@ import Common.Message;
 import Servers.Common.ServerCom;
 import Servers.DepartureAirport.DepartureAirportClientProxy;
 
+import java.io.EOFException;
+import java.io.IOException;
+
 public class DestinationAirportClientProxy extends Thread{
 
     /**
@@ -69,11 +72,15 @@ public class DestinationAirportClientProxy extends Thread{
 
     @Override
     public void run() {
+
         Message msg = (Message) conn.readObject();
         if (msg == null) return;
         Message send = destinationAirport.handleRequest(msg);
         conn.writeObject(send);
+
+
         conn.close();
+
     }
 
     private static int getProxyId ()

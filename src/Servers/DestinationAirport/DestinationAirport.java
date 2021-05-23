@@ -80,10 +80,9 @@ public class DestinationAirport
         if (nPassengers == 0)
         {
             System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot " + nPassengers);
-
-
+            notifyAll();
         }
-        notifyAll();
+
     }
 
 

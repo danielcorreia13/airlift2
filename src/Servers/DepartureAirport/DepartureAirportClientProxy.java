@@ -3,6 +3,9 @@ package Servers.DepartureAirport;
 import Common.Message;
 import Servers.Common.ServerCom;
 
+import java.io.EOFException;
+import java.io.IOException;
+
 public class DepartureAirportClientProxy extends Thread{
 
     /**
@@ -68,10 +71,13 @@ public class DepartureAirportClientProxy extends Thread{
 
     @Override
     public void run() {
-        Message msg = (Message) conn.readObject();
-        if (msg == null) return;
-        Message send = departureAirport.handleRequest(msg);
-        conn.writeObject(send);
+
+            Message msg = (Message) conn.readObject();
+            if (msg == null) return;
+            Message send = departureAirport.handleRequest(msg);
+            conn.writeObject(send);
+
+
         conn.close();
     }
 

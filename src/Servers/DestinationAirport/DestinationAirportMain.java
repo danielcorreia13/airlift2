@@ -7,6 +7,7 @@ import Client.stubs.GeneralRepStub;
 import Common.RunParameters;
 import Servers.Common.ServerCom;
 
+import java.io.EOFException;
 import java.net.SocketTimeoutException;
 
 public class DestinationAirportMain {
@@ -24,7 +25,7 @@ public class DestinationAirportMain {
         scon =  new ServerCom(RunParameters.DestinationAirportPort);
         scon.start();
         DestinationAirportClientProxy proxy;
-        while(true){
+        while(destinationAirport.getTotalPassengers() != RunParameters.nPassengers){
             try{
                 sconi = scon.accept ();
                 proxy = new DestinationAirportClientProxy(sconi,destinationAirportInterface);

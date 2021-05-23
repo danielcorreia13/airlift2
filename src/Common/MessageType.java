@@ -28,6 +28,6 @@ public enum MessageType
      * Control types
      */
 
-    OK
+    OK, SHUT
 
 }

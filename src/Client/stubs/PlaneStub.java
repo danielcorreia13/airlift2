@@ -213,4 +213,25 @@ public class PlaneStub
 
         return pkt.getInt1(); /* Return nPassengers */
     }
+
+    /**
+     * Shutdown the server
+     */
+    public void shutdown() {
+        ClientCom clientCom = Communication();
+
+        System.out.println("Sending to plane: Shutdown");
+
+        Message pkt = new Message();
+
+        /* Send Message */
+        pkt.setType(MessageType.SHUT);
+
+        clientCom.writeObject(pkt);
+
+        /* Receive Message */
+        pkt = (Message) clientCom.readObject();
+
+        clientCom.close();
+    }
 }

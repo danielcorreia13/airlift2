@@ -2,6 +2,7 @@ package Servers.Plane;
 
 import Client.stubs.GeneralRepStub;
 import Servers.Common.GeneralRep;
+import Servers.DepartureAirport.DepartureAirportMain;
 
 import javax.swing.plaf.synth.SynthTabbedPaneUI;
 
@@ -195,5 +196,17 @@ public class Plane
         notifyAll();
         System.out.println("FLIGHT DEPARTURE");
         return nPassengers;
+    }
+
+    /**
+     *   Operation server shutdown.
+     *
+     *   New operation.
+     */
+
+    public synchronized void shutdown ()
+    {
+        PlaneMain.shutdown = true;
+        notifyAll ();                                        // the barber may now terminate
     }
 }

@@ -11,9 +11,14 @@ import java.net.SocketTimeoutException;
 
 public class GeneralRepMain {
 
+    /**
+     * Flag to signal server shutdown
+     */
+    public static boolean shutdown;
+
     public static void main(String[] args)
     {
-        GeneralRep generalRep = new GeneralRep("LOG_FILE.txt");
+        GeneralRep generalRep = new GeneralRep(RunParameters.logFile);
 
         GeneralRepInterface generalRepInterface = new GeneralRepInterface(generalRep);
 
@@ -22,7 +27,8 @@ public class GeneralRepMain {
         scon =  new ServerCom(RunParameters.RepositoryPort);
         scon.start();
         GeneralRepClientProxy proxy;
-        while(true){
+        shutdown = false;
+        while(!shutdown){
             try{
                 sconi = scon.accept ();
                 proxy = new GeneralRepClientProxy(sconi,generalRepInterface);

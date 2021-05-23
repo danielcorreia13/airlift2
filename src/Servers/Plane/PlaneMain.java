@@ -11,6 +11,11 @@ import java.net.SocketTimeoutException;
 
 public class PlaneMain {
 
+    /**
+     * Flag to signal server shutdown
+     */
+    public static boolean shutdown;
+
     public static void main(String[] args)
     {
         GeneralRepStub generalRepStub = new GeneralRepStub();
@@ -24,7 +29,8 @@ public class PlaneMain {
         scon =  new ServerCom(RunParameters.PlanePort);
         scon.start();
         PlaneClientProxy proxy;
-        while(true){
+        shutdown = false;
+        while(!shutdown){
             try {
                 sconi = scon.accept();
                 proxy = new PlaneClientProxy(sconi, planeInterface);

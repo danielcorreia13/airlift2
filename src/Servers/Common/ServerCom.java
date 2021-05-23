@@ -229,8 +229,7 @@ public class ServerCom
    *    @return reference to the object that was read
    */
 
-   public Object readObject ()
-   {
+   public Object readObject () {
       Object fromClient = null;;                           // object that is read
 
       try
@@ -247,6 +246,7 @@ public class ServerCom
                                  " - error on reading an object from the input stream!");
         e.printStackTrace ();
         System.exit (1);
+
       }
       catch (ClassNotFoundException e)
       { System.out.println (Thread.currentThread ().getName () +

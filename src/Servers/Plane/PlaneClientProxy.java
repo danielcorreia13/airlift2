@@ -4,6 +4,8 @@ import Common.Message;
 import Servers.Common.ServerCom;
 import Servers.GenrealRep.GeneralRepClientProxy;
 
+import java.io.IOException;
+
 public class PlaneClientProxy extends Thread{
 
     /**
@@ -69,11 +71,13 @@ public class PlaneClientProxy extends Thread{
 
     @Override
     public void run() {
-        Message msg = (Message) conn.readObject();
-        if (msg == null) return;
-        Message send = plane.handleRequest(msg);
-        conn.writeObject(send);
-        conn.close();
+
+            Message msg = (Message) conn.readObject();
+            if (msg == null) return;
+            Message send = plane.handleRequest(msg);
+            conn.writeObject(send);
+            conn.close();
+
     }
 
     private static int getProxyId ()

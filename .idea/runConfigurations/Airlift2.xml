@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Airlift2" type="CompoundRunConfigurationType">
+    <toRun name="Pilot" type="Application" />
+    <toRun name="Plane" type="Application" />
+    <toRun name="GeneralRep" type="Application" />
+    <toRun name="DestinationAirport" type="Application" />
+    <toRun name="Hostess" type="Application" />
+    <toRun name="Passengers" type="Application" />
+    <toRun name="DepartureAirport" type="Application" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -41,6 +41,9 @@ public class PlaneInterface{
                 int ret = plane.waitForAllInBoard();
                 reply.setInt1(ret);
                 break;
+            case SHUT:
+                plane.shutdown();
+            break;
         }
 
         reply.setState(proxy.getEntityState());

@@ -57,14 +57,7 @@ public class DestinationAirportStub
     public void leaveThePlane() {
         ClientCom clientCom = Communication();
 
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+
 
         Passenger passenger = (Passenger) Thread.currentThread();
         System.out.println("PASSENGER " + passenger.getpId() + ": Left the plane");
@@ -97,15 +90,6 @@ public class DestinationAirportStub
     public void announceArrival(int nPass) {
         ClientCom clientCom = Communication();
 
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
         Pilot pilot = ((Pilot) Thread.currentThread());
         System.out.println("PILOT: Plane arrived at destination");
 
@@ -133,14 +117,6 @@ public class DestinationAirportStub
     public int getTotalPassengers() {
         ClientCom clientCom = Communication();
 
-        while( !clientCom.open() )
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
 
         Pilot pilot = (Pilot) Thread.currentThread();
 

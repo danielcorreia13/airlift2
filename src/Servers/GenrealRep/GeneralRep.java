@@ -236,5 +236,7 @@ public class GeneralRep implements Servers.Common.GeneralRep
 			log.println("Flight " + (i+1) + " transported " + nPassFlight[i] + " passengers");
 		}
         log.close();
+		GeneralRepMain.shutdown = true;
+		notifyAll();
     }
 }

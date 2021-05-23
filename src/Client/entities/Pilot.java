@@ -95,6 +95,8 @@ public class Pilot extends Thread
 //          System.out.println("\n");
         } while (destAirStub.getTotalPassengers() != RunParameters.nPassengers);
         depAirStub.parkAtTransferGate();
+        depAirStub.shutdown();
+        planeStub.shutdown();
     }
 
     /**

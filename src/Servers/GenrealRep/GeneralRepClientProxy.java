@@ -4,6 +4,8 @@ import Common.Message;
 import Servers.Common.ServerCom;
 import Servers.DestinationAirport.DestinationAirportClientProxy;
 
+import java.io.IOException;
+
 public class GeneralRepClientProxy extends Thread{
 
     /**
@@ -25,11 +27,13 @@ public class GeneralRepClientProxy extends Thread{
 
     @Override
     public void run() {
-        Message msg = (Message) conn.readObject();
-        if (msg == null) return;
-        Message send = generalRep.handleRequest(msg);
-        conn.writeObject(send);
-        conn.close();
+
+            Message msg = (Message) conn.readObject();
+            if (msg == null) return;
+            Message send = generalRep.handleRequest(msg);
+            conn.writeObject(send);
+            conn.close();
+
     }
 
     private static int getProxyId ()
