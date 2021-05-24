@@ -24,7 +24,7 @@ public class RunParameters
      */
     public static final String logFile = "log_" + new Date().toString().replace(' ', '_') + ".txt";
 
-    public static final int base_port = 22400;
+    public static final int base_port = 22402;
 
     /**
      * Departure Airport Port

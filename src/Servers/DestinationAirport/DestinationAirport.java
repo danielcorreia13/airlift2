@@ -31,6 +31,11 @@ public class DestinationAirport
      */
     private int totalPassengers;
 
+    /**
+     * Number of passengers in last plane
+     */
+    private int expectedPassengers;
+
 
 
     /*                                 CONSTRUCTOR                                   */
@@ -45,6 +50,7 @@ public class DestinationAirport
         this.generalRep = repos;
         this.nPassengers = 0;
         totalPassengers = 0;
+        expectedPassengers = -1;
     }
 
     /**
@@ -71,13 +77,21 @@ public class DestinationAirport
     public synchronized void leaveThePlane() {
         int passId = ((DestinationAirportClientProxy) Thread.currentThread()).getPassId();
 
+        while ( expectedPassengers == -1 )
+        {
+            try {
+                System.out.println(" [!] PASSENGER "+ passId +": Waiting... ");
+                wait();
+            } catch (InterruptedException ignored) {}
+        }
+
         System.out.println("PASSENGER " + passId + ": Left the plane");
         ((DestinationAirportClientProxy) Thread.currentThread()).setEntityState(AT_DESTINATION);
         generalRep.setPassengerState(passId, AT_DESTINATION);
-        this.nPassengers--;
+        this.nPassengers++;
         this.totalPassengers++;
         //System.out.println(nPassengers);
-        if (nPassengers == 0)
+        if (nPassengers == expectedPassengers)
         {
             System.out.println("        PASSENGER : " + passId + " Was the last to left the plane, notify the pilot " + nPassengers);
             notifyAll();
@@ -98,7 +112,8 @@ public class DestinationAirport
      */
     public synchronized void announceArrival(int nPass) {
 
-        nPassengers = nPass;
+        expectedPassengers = nPass;
+        notifyAll();
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         Date date = new Date();
@@ -111,7 +126,6 @@ public class DestinationAirport
         //System.out.println("    [!] Set destinanion flag at TRUE");
 
 
-
         System.out.println("PILOT: Waiting for all passengers to leave the plane " + nPassengers);
         while ( nPassengers != 0)
         {
@@ -119,11 +133,12 @@ public class DestinationAirport
                 wait();
             }catch (InterruptedException ignored){}
         }
-        System.out.println("PILOT: Returning " + nPassengers);
+        System.out.println("PILOT: Returning ");
         ((DestinationAirportClientProxy) Thread.currentThread()).setEntityState(FLYING_BACK);
         generalRep.writeLog("Returning");
         generalRep.setPilotState(FLYING_BACK);
-
+        nPassengers = 0;
+        expectedPassengers = -1;
         //System.out.println("\n\n    [!] Set destinanion flag at FALSE");
 
         notifyAll();

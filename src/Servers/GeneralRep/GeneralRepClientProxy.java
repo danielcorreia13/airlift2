@@ -1,4 +1,4 @@
-package Servers.GenrealRep;
+package Servers.GeneralRep;
 
 import Common.Message;
 import Servers.Common.ServerCom;
@@ -40,7 +40,7 @@ public class GeneralRepClientProxy extends Thread{
         int proxyId;
 
         try
-        { cl = Class.forName ("Servers.GenrealRep.GeneralRepClientProxy");
+        { cl = Class.forName ("Servers.GeneralRep.GeneralRepClientProxy");
         }
         catch (ClassNotFoundException e)
         { System.err.println ("Class was not found!");

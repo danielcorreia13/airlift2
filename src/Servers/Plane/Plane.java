@@ -133,13 +133,11 @@ public class Plane
             } catch (InterruptedException ignored) {}
         }
 
-
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         System.out.println(formatter.format(date) + " [!] PASSENGER "+ passId +": was informed do leave the plane ");
 
-
-        notifyAll();
+//        notifyAll();
 
     }
 

@@ -1,4 +1,4 @@
-package Servers.GenrealRep;
+package Servers.GeneralRep;
 
 import Common.*;
 

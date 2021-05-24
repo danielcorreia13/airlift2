@@ -84,10 +84,9 @@ public class Pilot extends Thread
 
             planeStub.setAtDestination(true);
             destAirStub.announceArrival(nPass);
-            planeStub.setAtDestination(false);
 
             flyToDeparturePoint();
-
+            planeStub.setAtDestination(false);
 //          System.out.println("\n");
         } while (destAirStub.getTotalPassengers() != RunParameters.nPassengers);
         depAirStub.parkAtTransferGate();
