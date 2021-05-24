@@ -2,10 +2,7 @@ package Servers.DestinationAirport;
 
 import Common.Message;
 import Servers.Common.ServerCom;
-import Servers.DepartureAirport.DepartureAirportClientProxy;
 
-import java.io.EOFException;
-import java.io.IOException;
 
 public class DestinationAirportClientProxy extends Thread{
 

@@ -1,6 +1,6 @@
 package Servers.DepartureAirport;
 
-import Client.entities.Passenger;
+
 
 import Client.stubs.GeneralRepStub;
 

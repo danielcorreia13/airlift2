@@ -24,7 +24,7 @@ public class RunParameters
      */
     public static final String logFile = "log_" + new Date().toString().replace(' ', '_') + ".txt";
 
-    public static final int base_port = 22000;
+    public static final int base_port = 22400;
 
     /**
      * Departure Airport Port
@@ -34,7 +34,8 @@ public class RunParameters
     /**
      * Departure Airport Hostname
      */
-    public static final String DepartureAirportHostName = "localhost";
+    public static final String DepartureAirportHostName = "l040101-ws04.ua.pt";
+//    public static final String DepartureAirportHostName = "localhost";
 
     /**
      * Destination Airport Port
@@ -44,7 +45,9 @@ public class RunParameters
     /**
      * Destination Airport Hostname
      */
-    public static final String DestinationAirportHostName = "localhost";
+    public static final String DestinationAirportHostName = "l040101-ws03.ua.pt";
+//    public static final String DestinationAirportHostName = "localhost";
+
 
     /**
      * Plane Port
@@ -54,7 +57,8 @@ public class RunParameters
     /**
      * Plane Hostname
      */
-    public static final String PlaneHostName = "localhost";
+    public static final String PlaneHostName = "l040101-ws02.ua.pt";
+//    public static final String PlaneHostName = "localhost";
 
     /**
      * Repository Port
@@ -64,5 +68,6 @@ public class RunParameters
     /**
      * Repository Hostname
      */
-    public static final String RepositoryHostName = "localhost";
+    public static final String RepositoryHostName = "l040101-ws01.ua.pt";
+//    public static final String RepositoryHostName = "localhost";
 }

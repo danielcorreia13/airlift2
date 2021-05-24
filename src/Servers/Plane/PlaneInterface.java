@@ -2,7 +2,6 @@ package Servers.Plane;
 
 import Common.Message;
 import static Common.MessageType.*;
-import Servers.DepartureAirport.DepartureAirportClientProxy;
 
 public class PlaneInterface{
 

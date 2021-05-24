@@ -1,8 +1,6 @@
 package Servers.DestinationAirport;
 
 import Common.*;
-import Servers.Common.*;
-import Servers.DepartureAirport.DepartureAirportClientProxy;
 
 import static Common.MessageType.OK;
 

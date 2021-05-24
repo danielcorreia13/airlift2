@@ -1,8 +1,6 @@
 package Servers.Plane;
 
 import Client.stubs.GeneralRepStub;
-import Servers.Common.GeneralRep;
-import Servers.DepartureAirport.DepartureAirportMain;
 
 import javax.swing.plaf.synth.SynthTabbedPaneUI;
 

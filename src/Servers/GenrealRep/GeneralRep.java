@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * Shared region : General Repository of Information
  */
-public class GeneralRep implements Servers.Common.GeneralRep
+public class GeneralRep
 {
 	/**
 	*  Log file handler.
@@ -185,35 +185,49 @@ public class GeneralRep implements Servers.Common.GeneralRep
 		StringBuilder lineStatus = new StringBuilder();                              // state line to be printed
 
 		switch (pilotState) {
-			case AT_TRANSFER_GATE -> lineStatus.append(" ATRG ");
-			case DEBOARDING -> lineStatus.append(" DRPP ");
-			case FLYING_BACK -> lineStatus.append(" FLBK ");
-			case FLYING_FORWARD -> lineStatus.append(" FLFW ");
-			case READY_FOR_BOARDING -> lineStatus.append(" RDFB ");
-			case WAIT_FOR_BOARDING -> lineStatus.append(" WTFB ");
+			case AT_TRANSFER_GATE :
+				lineStatus.append(" ATRG ");break;
+			case DEBOARDING  :
+				 lineStatus.append(" DRPP ");break;
+			case FLYING_BACK  :
+				 lineStatus.append(" FLBK ");break;
+			case FLYING_FORWARD  :
+				 lineStatus.append(" FLFW ");break;
+			case READY_FOR_BOARDING  :
+				 lineStatus.append(" RDFB ");break;
+			case WAIT_FOR_BOARDING  :
+				 lineStatus.append(" WTFB ");break;
 		}
 
 		switch (hostessState) {
-			case CHECK_PASSENGER -> lineStatus.append(" CKPS ");
-			case READY_TO_FLY -> lineStatus.append(" RDTF ");
-			case WAIT_FOR_NEXT_FLIGHT -> lineStatus.append(" WTFL ");
-			case WAIT_FOR_PASSENGER -> lineStatus.append(" WTFP ");
+			case CHECK_PASSENGER  :
+				 lineStatus.append(" CKPS ");break;
+			case READY_TO_FLY  :
+				 lineStatus.append(" RDTF ");break;
+			case WAIT_FOR_NEXT_FLIGHT  :
+				 lineStatus.append(" WTFL ");break;
+			case WAIT_FOR_PASSENGER  :
+				 lineStatus.append(" WTFP ");break;
 		}
 
 		for (int i = 0; i < RunParameters.nPassengers; i++)
 			switch (passengerState[i]) {
-				case GOING_TO_AIRPORT -> lineStatus.append(" GTAP ");
-				case AT_DESTINATION -> {
+				case GOING_TO_AIRPORT  :
+				 lineStatus.append(" GTAP ");break;
+				case AT_DESTINATION  :
+				 {
 					lineStatus.append(" ATDS ");
-					nPassArrived++;
+					nPassArrived++;break;
 				}
-				case IN_FLIGHT -> {
+				case IN_FLIGHT  :
+				 {
 					lineStatus.append(" INFL ");
-					nPassPlane++;
+					nPassPlane++;break;
 				}
-				case IN_QUEUE -> {
+				case IN_QUEUE  :
+				 {
 					lineStatus.append(" INQE ");
-					nPassQueue++;
+					nPassQueue++;break;
 				}
 			}
 

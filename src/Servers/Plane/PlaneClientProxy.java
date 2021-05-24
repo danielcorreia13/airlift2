@@ -2,9 +2,7 @@ package Servers.Plane;
 
 import Common.Message;
 import Servers.Common.ServerCom;
-import Servers.GenrealRep.GeneralRepClientProxy;
 
-import java.io.IOException;
 
 public class PlaneClientProxy extends Thread{
 

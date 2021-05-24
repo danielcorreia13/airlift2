@@ -1,7 +1,5 @@
 package Servers.Plane;
 
-import Client.entities.Passenger;
-
 import Client.stubs.GeneralRepStub;
 
 import Common.RunParameters;

@@ -1,8 +1,5 @@
 package Servers.GenrealRep;
 
-import Client.entities.Passenger;
-
-import Client.stubs.GeneralRepStub;
 
 import Common.RunParameters;
 import Servers.Common.ServerCom;

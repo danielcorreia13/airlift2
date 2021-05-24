@@ -2,9 +2,7 @@ package Servers.GenrealRep;
 
 import Common.Message;
 import Servers.Common.ServerCom;
-import Servers.DestinationAirport.DestinationAirportClientProxy;
 
-import java.io.IOException;
 
 public class GeneralRepClientProxy extends Thread{
 
