@@ -1,13 +1,6 @@
-echo "Transfering data to the Rep"
-sshpass -f password ssh sd401@192.168.8.171 'mkdir -p test/Airlift'
 
-sshpass -f password ssh sd401@192.168.8.171 'rm -rf test/Airlift/*'
-sshpass -f password scp deploy/GeneralRepServer.zip sd401@192.168.8.171:test/Airlift
-echo "Decompressing data."
-sshpass -f password ssh sd401@192.168.8.171 'cd test/Airlift ; unzip -uq GeneralRepServer.zip'
-echo "Executing program at GeneralRep node."
-sshpass -f password ssh sd401@192.168.8.171 'cd test/Airlift/GeneralRepServer ; java Servers.GeneralRep.GeneralRepMain' &
-
+echo "Killing process"
+sshpass -f password ssh sd401@192.168.8.172 'pkill -U sd401 java'
 echo "Transfering data to the Plane"
 sshpass -f password ssh sd401@192.168.8.172 'mkdir -p test/Airlift'
 sshpass -f password ssh sd401@192.168.8.172 'rm -rf test/Airlift/*'
@@ -17,6 +10,8 @@ sshpass -f password ssh sd401@192.168.8.172 'cd test/Airlift ; unzip -uq PlaneSe
 echo "Executing program at Plane node."
 sshpass -f password ssh sd401@192.168.8.172 'cd test/Airlift/PlaneServer ; java Servers.Plane.PlaneMain' &
 
+echo "Killing process"
+sshpass -f password ssh sd401@192.168.8.173 'pkill -U sd401 java'
 echo "Transfering data to the Destination Airport"
 sshpass -f password ssh sd401@192.168.8.173 'mkdir -p test/Airlift'
 sshpass -f password ssh sd401@192.168.8.173 'rm -rf test/Airlift/*'
@@ -26,6 +21,8 @@ sshpass -f password ssh sd401@192.168.8.173 'cd test/Airlift ; unzip -uq DestAir
 echo "Executing program at DestinationAirport node."
 sshpass -f password ssh sd401@192.168.8.173 'cd test/Airlift/DestAirServer ; java Servers.DestinationAirport.DestinationAirportMain' &
 
+echo "Killing process"
+sshpass -f password ssh sd401@192.168.8.174 'pkill -U sd401 java'
 echo "Transfering data to the Departure Airport"
 sshpass -f password ssh sd401@192.168.8.174 'mkdir -p test/Airlift'
 sshpass -f password ssh sd401@192.168.8.174 'rm -rf test/Airlift/*'
@@ -61,6 +58,19 @@ sshpass -f password scp deploy/PassengersClient.zip sd401@192.168.8.177:test/Air
 echo "Decompressing data."
 sshpass -f password ssh sd401@192.168.8.177 'cd test/Airlift ; unzip -uq PassengersClient.zip'
 echo "Executing program at the passengers node."
-sshpass -f password ssh sd401@192.168.8.177 'cd test/Airlift/PassengersClient ; java Client.PassengerMain'
+sshpass -f password ssh sd401@192.168.8.177 'cd test/Airlift/PassengersClient ; java Client.PassengerMain' &
+
+echo "Killing process"
+sshpass -f password ssh sd401@192.168.8.171 'pkill -U sd401 java'
+echo "Transfering data to the Rep"
+sshpass -f password ssh sd401@192.168.8.171 'mkdir -p test/Airlift'
+sshpass -f password ssh sd401@192.168.8.171 'rm -rf test/Airlift/*'
+sshpass -f password scp deploy/GeneralRepServer.zip sd401@192.168.8.171:test/Airlift
+echo "Decompressing data."
+sshpass -f password ssh sd401@192.168.8.171 'cd test/Airlift ; unzip -uq GeneralRepServer.zip'
+echo "Executing program at GeneralRep node."
+sshpass -f password ssh sd401@192.168.8.171 'rm -f test/Airlift/GeneralRepServer/log*'
+sshpass -f password ssh sd401@192.168.8.171 'cd test/Airlift/GeneralRepServer ; java Servers.GeneralRep.GeneralRepMain'
+
 
 sshpass -f password ssh sd401@192.168.8.171 'cat test/Airlift/GeneralRepServer/log*'

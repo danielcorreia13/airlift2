@@ -1,8 +1,4 @@
 
-echo "Executing program at GeneralRep node."
-sshpass -f password ssh sd401@192.168.8.171 'rm -f test/Airlift/GeneralRepServer/log*'
-sshpass -f password ssh sd401@192.168.8.171 'cd test/Airlift/GeneralRepServer ; java Servers.GeneralRep.GeneralRepMain' &
-
 echo "Executing program at Plane node."
 sshpass -f password ssh sd401@192.168.8.172 'cd test/Airlift/PlaneServer ; java Servers.Plane.PlaneMain' &
 
@@ -19,7 +15,12 @@ echo "Executing program at pilot node."
 sshpass -f password ssh sd401@192.168.8.180 'cd test/Airlift/PilotClient ; java Client.PilotMain' &
 
 echo "Executing program at the passengers node."
-sshpass -f password ssh sd401@192.168.8.177 'cd test/Airlift/PassengersClient ; java Client.PassengerMain'
+sshpass -f password ssh sd401@192.168.8.177 'cd test/Airlift/PassengersClient ; java Client.PassengerMain' &
+
+echo "Executing program at GeneralRep node."
+sshpass -f password ssh sd401@192.168.8.171 'rm -f test/Airlift/GeneralRepServer/log*'
+sshpass -f password ssh sd401@192.168.8.171 'cd test/Airlift/GeneralRepServer ; java Servers.GeneralRep.GeneralRepMain'
+
 
 sshpass -f password ssh sd401@192.168.8.171 'cat test/Airlift/GeneralRepServer/log*'
 

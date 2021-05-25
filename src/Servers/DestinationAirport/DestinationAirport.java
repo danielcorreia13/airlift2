@@ -127,7 +127,7 @@ public class DestinationAirport
 
 
         System.out.println("PILOT: Waiting for all passengers to leave the plane " + nPassengers);
-        while ( nPassengers != 0)
+        while ( nPassengers != expectedPassengers)
         {
             try{
                 wait();
