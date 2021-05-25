@@ -8,11 +8,9 @@ import static Common.States.Passenger.*;
 import static Common.States.Pilot.*;
 import static Common.States.Hostess.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
- * Shared region : Plane
+ * Server side, Shared region : Plane
  */
 public class Plane
 {
@@ -77,8 +75,8 @@ public class Plane
         ((PlaneClientProxy) Thread.currentThread()).setEntityState(READY_TO_FLY);
         generalRep.setHostess(READY_TO_FLY);
         generalRep.writeLog("Departed with " + nPass + " passengers");
-        System.out.println("Departed with " + nPass + " passengers");
-        System.out.println("HOSTESS->PILOT: Plane is ready for takeoff");
+//        System.out.println("Departed with " + nPass + " passengers");
+//        System.out.println("HOSTESS->PILOT: Plane is ready for takeoff");
 
         notifyAll();
 
@@ -124,18 +122,13 @@ public class Plane
     {
     	int passId = ((PlaneClientProxy) Thread.currentThread()).getPassId();
 
-
         while ( !isAtDestination() )
         {
             try {
-                System.out.println(" [!] PASSENGER "+ passId +": Waiting... ");
+//                System.out.println(" [!] PASSENGER "+ passId +": Waiting... ");
                 wait();
             } catch (InterruptedException ignored) {}
         }
-
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
-        System.out.println(formatter.format(date) + " [!] PASSENGER "+ passId +": was informed do leave the plane ");
 
 //        notifyAll();
 
@@ -150,11 +143,11 @@ public class Plane
      */
     public synchronized void boardThePlane()
     {
-        System.out.println("BOARD THE PLANE");
+//        System.out.println("BOARD THE PLANE");
         int passId = ((PlaneClientProxy) Thread.currentThread()).getPassId();
         ((PlaneClientProxy) Thread.currentThread()).setEntityState(IN_FLIGHT);
         generalRep.setPassengerState(passId, IN_FLIGHT);
-        System.out.println("PASSENGER "+passId+ ": Seated on plane");
+//        System.out.println("PASSENGER "+passId+ ": Seated on plane");
         nPassengers++;
 
         notifyAll();
@@ -190,7 +183,7 @@ public class Plane
         generalRep.setPilotState(FLYING_FORWARD);
 
         notifyAll();
-        System.out.println("FLIGHT DEPARTURE");
+//        System.out.println("FLIGHT DEPARTURE");
         return nPassengers;
     }
 

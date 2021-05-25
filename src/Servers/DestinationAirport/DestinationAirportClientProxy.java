@@ -12,7 +12,15 @@ public class DestinationAirportClientProxy extends Thread{
 
     private static int nProxy = 0;
 
+    /**
+     *  Communication channel.
+     */
+
     private final ServerCom conn;
+
+    /**
+     *  Interface to the Destination Airport
+     */
 
     private final DestinationAirportInterface destinationAirport;
 
@@ -60,6 +68,12 @@ public class DestinationAirportClientProxy extends Thread{
         this.entityState = entityState;
     }
 
+    /**
+     *  Instantiation of a Departure Airport Proxy
+     *
+     *     @param conn communication channel
+     *     @param destinationAirport interface to Destination Airport
+     */
 
     public DestinationAirportClientProxy(ServerCom conn, DestinationAirportInterface destinationAirport) {
         super ("DestinationAirport_" + DestinationAirportClientProxy.getProxyId ());
@@ -67,18 +81,25 @@ public class DestinationAirportClientProxy extends Thread{
         this.destinationAirport = destinationAirport;
     }
 
-    @Override
-    public void run() {
+    /**
+     *  Life cycle of the service provider agent.
+     */
 
+    @Override
+    public void run()
+    {
         Message msg = (Message) conn.readObject();
         if (msg == null) return;
         Message send = destinationAirport.handleRequest(msg);
         conn.writeObject(send);
-
-
         conn.close();
-
     }
+
+    /**
+     *  Generation of the instantiation identifier.
+     *
+     *     @return instantiation identifier
+     */
 
     private static int getProxyId ()
     {

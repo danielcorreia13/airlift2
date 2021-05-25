@@ -7,6 +7,10 @@ import Servers.Common.ServerCom;
 
 import java.net.SocketTimeoutException;
 
+/**
+ *    Server side of the Plane Main
+ */
+
 public class PlaneMain {
 
     /**
@@ -14,21 +18,25 @@ public class PlaneMain {
      */
     public static boolean shutdown;
 
+    /**
+     *  Main method.
+     *
+     *    @param args runtime arguments
+     */
+
     public static void main(String[] args)
     {
         GeneralRepStub generalRepStub = new GeneralRepStub();
-
         Plane plane = new Plane(generalRepStub);
-
         PlaneInterface planeInterface = new PlaneInterface(plane);
-
         ServerCom scon, sconi;
-
         scon =  new ServerCom(RunParameters.PlanePort);
         scon.start();
         PlaneClientProxy proxy;
         shutdown = false;
-        while(!shutdown){
+
+        while(!shutdown)
+        {
             try {
                 sconi = scon.accept();
                 proxy = new PlaneClientProxy(sconi, planeInterface);
@@ -36,5 +44,4 @@ public class PlaneMain {
             }catch (SocketTimeoutException e) {}
         }
     }
-
 }

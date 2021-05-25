@@ -12,7 +12,6 @@ public class GeneralRepStub {
 
     public GeneralRepStub () { }
 
-//    private static ClientCom clientCom;
 
     /**
      *  Operation to performe a client communication with server
@@ -21,8 +20,7 @@ public class GeneralRepStub {
      *
      * @return ClientCom object
      */
-    public ClientCom Communication()
-    {
+    public ClientCom Communication() {
         ClientCom clientCom = new ClientCom(RunParameters.RepositoryHostName, RunParameters.RepositoryPort);
 
         while( !clientCom.open() )
@@ -105,14 +103,12 @@ public class GeneralRepStub {
     public void nextFlight(){
         ClientCom clientCom = Communication();
         Message pkt = new Message();
-        System.out.println("Sending to rep: Pilot: next flight");
         /* Send Message */
         pkt.setType(MessageType.NEXT_FLIGHT);
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-//        System.out.println("recieved from rep: Pilot: next flight");
         clientCom.close();
     }
 
@@ -156,6 +152,4 @@ public class GeneralRepStub {
 
         clientCom.close();
     }
-
-    
 }

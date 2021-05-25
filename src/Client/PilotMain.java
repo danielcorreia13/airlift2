@@ -11,30 +11,30 @@ import Client.stubs.PlaneStub;
 public class PilotMain
 {
     /**
-     *  Reference to Departure Airport
+     *  Reference to Departure Airport Stub
      */
     private static DepartureAirportStub departureAirportStub;
 
     /**
-     *  Reference to Destination Airport
+     *  Reference to Destination Airport Stub
      */
     private static DestinationAirportStub destinationAirportStub;
 
     /**
-     *  Reference to Plane
+     *  Reference to Plane Stub
      */
     private static PlaneStub planeStub;
-
-    /**
-     *  Reference to the general repository of information
-     */
-    //private final GeneralRep generalRep;
 
     /**
      *  Reference to Pilot
      */
     private static Pilot pilot;
 
+    /**
+     * Pilot Main function
+     *
+     * @param args
+     */
     public static void main(String[] args)
     {
         departureAirportStub = new DepartureAirportStub();
@@ -43,6 +43,7 @@ public class PilotMain
         pilot = new Pilot("pilot1", departureAirportStub, destinationAirportStub, planeStub);
 
         pilot.start();
+
         try
         {
             pilot.join();
@@ -52,5 +53,4 @@ public class PilotMain
             System.out.println("Something went wrong");
         }
     }
-
 }

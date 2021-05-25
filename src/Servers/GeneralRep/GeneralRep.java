@@ -147,7 +147,7 @@ public class GeneralRep
     *	@param msg message to write in log
     */
 	public synchronized void writeLog(String msg){
-		System.out.println("FINAL:" + msg);
+//		System.out.println("FINAL:" + msg);
     	log.println("\nFlight " + flightId + ": " + msg);
 	}
 	    

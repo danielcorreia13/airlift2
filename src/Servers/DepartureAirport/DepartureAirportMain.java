@@ -9,6 +9,10 @@ import Servers.Common.ServerCom;
 
 import java.net.SocketTimeoutException;
 
+/**
+ *    Server side of the Departure Airport Main
+ */
+
 public class DepartureAirportMain {
 
     /**
@@ -16,21 +20,25 @@ public class DepartureAirportMain {
      */
     public static boolean shutdown;
 
+    /**
+     *  Main method.
+     *
+     *    @param args runtime arguments
+     */
+
     public static void main(String[] args)
     {
         GeneralRepStub generalRepStub = new GeneralRepStub();
-
         DepartureAirport departureAirport = new DepartureAirport(generalRepStub);
-
         DepartureAirportInterface departureAirportInterface = new DepartureAirportInterface(departureAirport);
-
         ServerCom scon, sconi;
-
         scon =  new ServerCom(RunParameters.DepartureAirportPort);
         scon.start();
         DepartureAirportClientProxy proxy;
         shutdown = false;
-        while(!shutdown){
+
+        while(!shutdown)
+        {
             try{
                 sconi = scon.accept ();
                 proxy = new DepartureAirportClientProxy(sconi,departureAirportInterface);
@@ -39,5 +47,4 @@ public class DepartureAirportMain {
         }
         generalRepStub.endReport();
     }
-
 }

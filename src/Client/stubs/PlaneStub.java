@@ -16,9 +16,7 @@ public class PlaneStub
     /**
      *  Reference to ClientCom
      */
-//    private static ClientCom clientCom;
 
-    
     /*                                 CONSTRUCTOR                                   */
     /*-------------------------------------------------------------------------------*/
 
@@ -66,15 +64,13 @@ public class PlaneStub
         ClientCom clientCom = Communication();
 
         Hostess hostess = (Hostess) Thread.currentThread();
-        System.out.println("HOSTESS: Inform that plane is ready to takeoff");
 
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.INFORM_PLANE_READY_TAKEOFF);
-//        pkt.setId( hostess.getId() );
         pkt.setState( hostess.gethState() );
-        pkt.setInt1(nPass);                                /* Enviar o parametro recebido na funcao */
+        pkt.setInt1(nPass);
         clientCom.writeObject(pkt);
 
         pkt = (Message) clientCom.readObject();
@@ -84,19 +80,6 @@ public class PlaneStub
     }
 
 
-    /**
-     *  Operation inform that plane is at destination
-     *
-     *  It is called by the pilot to notify passengers that the plane was landed
-     *
-     * @return true if at destination
-     */
-    /* TODO : Verificar se e necessario */
-    public boolean isAtDestination() {
-        //return this.atDestination;
-        return false;
-    }
-
     //                                  PASSENGER                                    //
     //---------------------------------------------------------------------------------
 
@@ -104,7 +87,6 @@ public class PlaneStub
      *  Operation inform that the passenger is waiting for the end of the flight
      *
      *  It is called by the PASSENGER when he is on the plane
-     *
      *
      */
     public void waitForEndOfFlight() {
@@ -124,7 +106,6 @@ public class PlaneStub
         pkt = (Message) clientCom.readObject();
         passenger.setpState( pkt.getState() );
 
-        System.out.println("PASSENGER " + passenger.getpId() + ": Left the plane");
         clientCom.close();
     }
 
@@ -138,7 +119,7 @@ public class PlaneStub
         ClientCom clientCom = Communication();
 
         Passenger passenger = (Passenger) Thread.currentThread();
-        System.out.println("Sending: PASSENGER "+ passenger.getpId() +": Board the plane");
+
         Message pkt = new Message();
 
         /* Send Message */
@@ -151,7 +132,6 @@ public class PlaneStub
         pkt = (Message) clientCom.readObject();
         passenger.setpState( pkt.getState() );
 
-        System.out.println("Recieved: PASSENGER " + passenger.getpId() + ": Board the plane");
         clientCom.close();
     }
 
@@ -169,15 +149,13 @@ public class PlaneStub
         ClientCom clientCom = Communication();
 
         Pilot pilot = (Pilot) Thread.currentThread();
-        System.out.println("PILOT: Inform that plane is at destination");
 
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.SET_AT_DESTINATION);
-//        pkt.setId( pilot.getId() );
         pkt.setState( pilot.getPilotState() );
-        pkt.setBool1( atDestination );                              /* Enviar o parametro recebido na funcao */
+        pkt.setBool1( atDestination );
         clientCom.writeObject(pkt);
 
         pkt = (Message) clientCom.readObject();
@@ -196,19 +174,16 @@ public class PlaneStub
         ClientCom clientCom = Communication();
 
         Pilot pilot = (Pilot) Thread.currentThread();
-        System.out.println("Sending: PILOT: Wait for all in board");
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.WAIT_FOR_ALL_IN_BOARD);
-//        pkt.setId( pilot.getId() );
         pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
         pilot.setPilotState( pkt.getState() );
-        System.out.println("recieved: PILOT: All in board");
         clientCom.close();
 
         return pkt.getInt1(); /* Return nPassengers */
@@ -220,13 +195,10 @@ public class PlaneStub
     public void shutdown() {
         ClientCom clientCom = Communication();
 
-        System.out.println("Sending to plane: Shutdown");
-
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.SHUT);
-
         clientCom.writeObject(pkt);
 
         /* Receive Message */

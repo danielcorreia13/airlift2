@@ -12,18 +12,18 @@ import Client.stubs.PlaneStub;
  */
 public class Passenger extends Thread {
     /**
-     * Reference to Departure Airport
+     * Reference to Departure Airport Stub
      */
 
     private final DepartureAirportStub depAirStub;
 
     /**
-     * Reference to Destination Airport
+     * Reference to Destination Airport Stub
      */
     private final DestinationAirportStub destAirStub;
 
     /**
-     * Reference to Plane
+     * Reference to Plane Stub
      */
     private final PlaneStub planeStub;
 
@@ -86,28 +86,21 @@ public class Passenger extends Thread {
     public int getpId() {
         return pId;
     }
+
     /**
      * Life cycle of the passenger.
      */
-
     @Override
     public void run() {
         try {
-            System.out.println("----------------Travel to airport" + getpId());
             travelToAirport();
             sleep(30);
-            System.out.println("-----------------Wait in Queue" + getpId());
             depAirStub.waitInQueue();
-            //depAirStub.showDocuments();
-            System.out.println("-----------------Board the plane" + getpId());
             planeStub.boardThePlane();
-//            sleep(450);
-            System.out.println("-----------------Waiting" + getpId());
             planeStub.waitForEndOfFlight();
-            System.out.println("-----------------Leave  the plane" + getpId());
             destAirStub.leaveThePlane();
         } catch (InterruptedException e) {
-            System.out.print("Something went wrong");
+            System.out.print("Something went wrong running passenger life cycle");
         }
     }
 
@@ -123,5 +116,4 @@ public class Passenger extends Thread {
         } catch (InterruptedException ignored) {
         }
     }
-
 }

@@ -6,12 +6,23 @@ import Servers.Common.ServerCom;
 
 import java.net.SocketTimeoutException;
 
+/**
+ *    Server side of the General Repository Main
+ */
+
 public class GeneralRepMain {
 
     /**
      * Flag to signal server shutdown
      */
+
     public static boolean shutdown;
+
+    /**
+     *  Main method.
+     *
+     *    @param args runtime arguments
+     */
 
     public static void main(String[] args)
     {
@@ -33,5 +44,4 @@ public class GeneralRepMain {
             }catch (SocketTimeoutException e) {}
         }
     }
-
 }

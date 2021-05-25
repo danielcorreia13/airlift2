@@ -98,33 +98,6 @@ public class Message implements Serializable {
      */
     private boolean validInt1;
 
-//    /**
-//     * Second int value to be transported
-//     *
-//     * @serial int2
-//     */
-//    private int int2;
-//
-//    /**
-//     * Second int value is valid
-//     *
-//     * @serial validInt2
-//     */
-//    private boolean validInt2;
-
-//    /**
-//     * Third int value to be transported
-//     *
-//     * @serial int3
-//     */
-//    private int int3;
-//
-//    /**
-//     * Third int value is valid
-//     *
-//     * @serial validInt3
-//     */
-//    private boolean validInt3;
 
     /**
      * First boolean value to be transported
@@ -140,20 +113,6 @@ public class Message implements Serializable {
      */
     private boolean validBool1;
 
-//    /**
-//     * Second boolean value to be transported
-//     *
-//     * @serial boole2
-//     */
-//    private boolean bool2;
-//
-//    /**
-//     * Second boolean value is valid
-//     *
-//     * @serial validBool2
-//     */
-//    private boolean validBool2;
-
 
     /**
      * Packet instantiation
@@ -166,9 +125,7 @@ public class Message implements Serializable {
         this.validPassengerState = false;
         this.validType = false;
         this.validInt1 = false;
-
         this.validBool1 = false;
-
     }
 
     /**
@@ -382,7 +339,4 @@ public class Message implements Serializable {
     {
         return this.validBool1;
     }
-
-
-
 }

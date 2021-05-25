@@ -5,20 +5,43 @@ import Servers.Common.*;
 
 import static Common.MessageType.OK;
 
+/**
+ *  Interface to the Departure Airport.
+ *
+ *    It is responsible to validate and process the incoming message, execute the corresponding method on the
+ *    Departure Airport and generate the outgoing message.
+ */
 
 public class DepartureAirportInterface{
 
+    /**
+     *  Reference to the Departure Airport.
+     */
+
     private final DepartureAirport departureAirport;
+
+    /**
+     *  Instantiation of an interface to the Departure Airport.
+     *
+     *    @param departureAirport reference to the barber shop
+     */
 
     public DepartureAirportInterface(DepartureAirport departureAirport){
 
         this.departureAirport = departureAirport;
     }
 
-    public Message handleRequest(Message request) {
-        //System.out.println("Received request: " + request.getType());
-        //System.out.println("Received Client State: " + request.getState() );
+    /**
+     *  Processing of the incoming messages.
+     *
+     *  Validation, execution of the corresponding method and generation of the outgoing message.
+     *
+     *    @param request service request
+     *    @return service reply
+     */
 
+    public Message handleRequest(Message request)
+    {
         Message reply = new Message();
         reply.setType(OK);
 
@@ -30,10 +53,6 @@ public class DepartureAirportInterface{
                 proxy.setPassId(request.getId());
                 departureAirport.waitInQueue();
                 break;
-            /*case SHOW_DOCUMENTS:
-                proxy.setPassId(request.getId());
-                departureAirport.showDocuments();
-                break;*/
             case WAIT_FOR_NEXT_PASSENGER:
                 departureAirport.waitForNextPassenger();
                 break;
@@ -60,6 +79,5 @@ public class DepartureAirportInterface{
         reply.setState(proxy.getEntityState());
 
         return reply;
-
     }
 }

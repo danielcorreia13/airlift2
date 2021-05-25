@@ -5,21 +5,42 @@ import Common.*;
 
 import static Common.MessageType.OK;
 
+/**
+ *  Interface to the General Repository.
+ *
+ *    It is responsible to validate and process the incoming message, execute the corresponding method on the
+ *    General Repository and generate the outgoing message.
+ */
 
 public class GeneralRepInterface{
 
+    /**
+     *  Reference to the General Repository.
+     */
+
     private final GeneralRep generalRep;
+
+    /**
+     *  Instantiation of an interface to the General Repository.
+     *
+     *    @param generalRep reference to the barber shop
+     */
 
     public GeneralRepInterface(GeneralRep generalRep) {
         this.generalRep = generalRep;
     }
 
+    /**
+     *  Processing of the incoming messages.
+     *
+     *  Validation, execution of the corresponding method and generation of the outgoing message.
+     *
+     *    @param request service request
+     *    @return service reply
+     */
 
-    public Message handleRequest(Message request) {
-
-        //System.out.println("Received request: " + request.getType());
-        //System.out.println("ID:" + request.getId());
-
+    public Message handleRequest(Message request)
+    {
         Message reply = new Message();
         reply.setType(OK);
 
@@ -37,17 +58,13 @@ public class GeneralRepInterface{
                 generalRep.nextFlight();
                 break;
             case WRITE_LOG:
-                System.out.println("GETSTR: " + request.getStr());
                 generalRep.writeLog(request.getStr());
                 break;
             case END_REPORT:
                 generalRep.endReport();
                 break;
-
         }
 
         return reply;
-
     }
-
 }

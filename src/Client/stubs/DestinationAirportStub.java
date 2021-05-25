@@ -14,8 +14,6 @@ import Common.RunParameters;
 public class DestinationAirportStub
 {
 
-//    private static ClientCom clientCom;
-
     /*                                 CONSTRUCTOR                                   */
     /*-------------------------------------------------------------------------------*/
     /**
@@ -57,10 +55,7 @@ public class DestinationAirportStub
     public void leaveThePlane() {
         ClientCom clientCom = Communication();
 
-
-
         Passenger passenger = (Passenger) Thread.currentThread();
-        System.out.println("PASSENGER " + passenger.getpId() + ": Left the plane");
 
         Message pkt = new Message();
 
@@ -91,15 +86,13 @@ public class DestinationAirportStub
         ClientCom clientCom = Communication();
 
         Pilot pilot = ((Pilot) Thread.currentThread());
-        System.out.println("PILOT: Plane arrived at destination");
 
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.ANNOUNCE_ARRIVAL);
-//        pkt.setId( pilot.getId());
         pkt.setState( pilot.getPilotState() );
-        pkt.setInt1(nPass);                    /* Send num of passenger to server */
+        pkt.setInt1(nPass);
         clientCom.writeObject(pkt);
 
         /* Receive Message */
@@ -117,14 +110,12 @@ public class DestinationAirportStub
     public int getTotalPassengers() {
         ClientCom clientCom = Communication();
 
-
         Pilot pilot = (Pilot) Thread.currentThread();
 
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.GET_TOTAL_PASSENGERS);
-//        pkt.setId( pilot.getId() );
         pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
 

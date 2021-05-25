@@ -15,17 +15,17 @@ import Common.RunParameters;
 public class Pilot extends Thread
 {
     /**
-     *  Reference to Departure Airport
+     *  Reference to Departure Airport Stub
      */
     private final DepartureAirportStub depAirStub;
 
     /**
-     *  Reference to Destination Airport
+     *  Reference to Destination Airport Stub
      */
     private final DestinationAirportStub destAirStub;
 
     /**
-     *  Reference to Plane
+     *  Reference to Plane Stub
      */
     private final PlaneStub planeStub;
 
@@ -42,7 +42,6 @@ public class Pilot extends Thread
      * @param destAirStub Reference to Destination Airport
      * @param planeStub Reference to Plane
      */
-
     public Pilot(String name, DepartureAirportStub depAirStub, DestinationAirportStub destAirStub, PlaneStub planeStub)
     {
         super(name);
@@ -81,13 +80,10 @@ public class Pilot extends Thread
             depAirStub.informPlaneReadyForBoarding();
             int nPass = planeStub.waitForAllInBoard();
             flyToDestinationPoint();
-
             planeStub.setAtDestination(true);
             destAirStub.announceArrival(nPass);
-
             flyToDeparturePoint();
             planeStub.setAtDestination(false);
-//          System.out.println("\n");
         } while (destAirStub.getTotalPassengers() != RunParameters.nPassengers);
         depAirStub.parkAtTransferGate();
         depAirStub.shutdown();
@@ -129,5 +125,4 @@ public class Pilot extends Thread
         }
         catch (InterruptedException ignored) {}
     }
-
 }

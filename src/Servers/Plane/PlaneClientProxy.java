@@ -3,6 +3,9 @@ package Servers.Plane;
 import Common.Message;
 import Servers.Common.ServerCom;
 
+/**
+ *  Service provider agent for access to the Departure Airport.
+ */
 
 public class PlaneClientProxy extends Thread{
 
@@ -12,10 +15,17 @@ public class PlaneClientProxy extends Thread{
 
     private static int nProxy = 0;
 
+    /**
+     *  Communication channel.
+     */
+
     private final ServerCom conn;
 
-    private final PlaneInterface plane;
+    /**
+     *  Interface to the Plane
+     */
 
+    private final PlaneInterface plane;
 
     /**
      *  Id do passageiro
@@ -61,22 +71,38 @@ public class PlaneClientProxy extends Thread{
         this.entityState = entityState;
     }
 
+    /**
+     *  Instantiation of a Departure Airport Proxy
+     *
+     *     @param conn communication channel
+     *     @param plane interface to Plane
+     */
+
     public PlaneClientProxy(ServerCom conn, PlaneInterface plane) {
         super ("Plane_" + PlaneClientProxy.getProxyId ());
         this.conn = conn;
         this.plane = plane;
     }
 
+    /**
+     *  Life cycle of the service provider agent.
+     */
+
     @Override
-    public void run() {
-
-            Message msg = (Message) conn.readObject();
-            if (msg == null) return;
-            Message send = plane.handleRequest(msg);
-            conn.writeObject(send);
-            conn.close();
-
+    public void run()
+    {
+        Message msg = (Message) conn.readObject();
+        if (msg == null) return;
+        Message send = plane.handleRequest(msg);
+        conn.writeObject(send);
+        conn.close();
     }
+
+    /**
+     *  Generation of the instantiation identifier.
+     *
+     *     @return instantiation identifier
+     */
 
     private static int getProxyId ()
     {

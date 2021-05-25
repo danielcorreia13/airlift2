@@ -11,19 +11,15 @@ import Client.stubs.PlaneStub;
 public class HostessMain
 {
     /**
-     *  Reference to Departure Airport
+     *  Reference to Departure Airport Stub
      */
     private static DepartureAirportStub sharedDepartureAirportStub;
 
     /**
-     *  Reference to Plane
+     *  Reference to Plane Stub
      */
     private static PlaneStub sharedPlaneStub;
 
-    /**
-     *  Reference to the general repository of information
-     */
-    //private final GeneralRep generalRep;
 
     /**
      *  Reference to Hostess

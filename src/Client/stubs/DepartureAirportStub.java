@@ -14,9 +14,6 @@ import Common.RunParameters;
 public class DepartureAirportStub
 {
 
-    //private static ClientCom clientCom;
-
-
     /*                                  CONSTRUCTOR                                    */
     /*---------------------------------------------------------------------------------*/
 
@@ -53,6 +50,7 @@ public class DepartureAirportStub
     /*---------------------------------------------------------------------------------*/
 
     /**
+     * Operation to check if Passenger Queue is empty
      *
      * @return true if the passenger queue is empty
      */
@@ -65,7 +63,6 @@ public class DepartureAirportStub
 
         /* Send Message */
         pkt.setType(MessageType.CHECK_QUEUE_EMPTY);
-//        pkt.setId( hostess.getId() );
         pkt.setState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
@@ -79,6 +76,7 @@ public class DepartureAirportStub
     }
 
     /**
+     * Operation called by hostess to get the number of passengers
      *
      * @return the number of passengers that have been checked
      */
@@ -86,19 +84,16 @@ public class DepartureAirportStub
         ClientCom clientCom = Communication();
 
         Hostess hostess = (Hostess) Thread.currentThread();
-        System.out.println("Sending: HOSTESS: Get n Passengers");
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.GET_N_PASSENGERS);
-//        pkt.setId( hostess.getId() );
         pkt.setState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
         hostess.sethState ( pkt.getState() );
-        System.out.println("Recieved: HOSTESS: Get n Passengers");
         clientCom.close();
 
         return pkt.getInt1(); /* Return to client int value received from server */
@@ -113,14 +108,12 @@ public class DepartureAirportStub
     public void checkDocuments() {
         ClientCom clientCom = Communication();
 
-        System.out.println("Sending: Hostess: Check documents");
         Hostess hostess = (Hostess) Thread.currentThread();
 
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.CHECK_DOCUMENTS);
-//        pkt.setId( hostess.getId() );
         pkt.setState( hostess.gethState() );
         clientCom.writeObject(pkt);
 
@@ -140,13 +133,11 @@ public class DepartureAirportStub
     public void waitForNextPassenger() {
         ClientCom clientCom = Communication();
 
-        System.out.println("Sending: HOSTESS: Waiting for passenger on Queue");
         Hostess hostess = (Hostess) Thread.currentThread();
 
         Message pkt = new Message();
 
         pkt.setType(MessageType.WAIT_FOR_NEXT_PASSENGER);
-//        pkt.setId( hostess.getId() );
         pkt.setState( hostess.gethState() );
 
         clientCom.writeObject(pkt);
@@ -166,23 +157,20 @@ public class DepartureAirportStub
     public void waitForNextFlight() {
         ClientCom clientCom = Communication();
 
-        System.out.println("Sending: HOSTESS: Waiting for next flight");
-        Hostess hostess = (Hostess) Thread.currentThread();   /* Caso comunicação estabelecida, busca o thread atual */
+        Hostess hostess = (Hostess) Thread.currentThread();
 
         Message pkt = new Message();
 
         /* Send Message */
-        pkt.setType(MessageType.WAIT_FOR_NEXT_FLIGHT);        /* Tipo de mensagem */
-//        pkt.setId( hostess.getId() );                       /* Id da thread */
-        pkt.setState(hostess.gethState());                /* Estado atual da thread */
-
-        clientCom.writeObject(pkt);                           /* Escreve o objeto na mensagem */
+        pkt.setType(MessageType.WAIT_FOR_NEXT_FLIGHT);
+        pkt.setState(hostess.gethState());
+        clientCom.writeObject(pkt);
 
         /* Receive Message */
-        pkt = (Message) clientCom.readObject();               /* Recebe uma mensagem do servidor */
-        hostess.sethState( pkt.getState() );                  /* Atualiza o estado caso tenha mudado */
+        pkt = (Message) clientCom.readObject();
+        hostess.sethState( pkt.getState() );
 
-        clientCom.close();                                    /* Encerra a comunicação */
+        clientCom.close();
     }
 
 
@@ -190,15 +178,14 @@ public class DepartureAirportStub
     /*---------------------------------------------------------------------------------*/
 
     /**
-     *  Operation inform the hostess that the passenger is waiting on departure airport queue
+     *  Operation inform the hostess that a passenger is waiting on departure airport queue
      *
-     *  It is called by the PASSENGER when he is on the queue
+     *  It is called by the PASSENGER when is on the queue
      *
      */
     public void waitInQueue() {
         ClientCom clientCom = Communication();
 
-        System.out.println("Sending: Passenger " + ((Passenger)Thread.currentThread()).getpId() + " in queue");
         Passenger passenger = (Passenger) Thread.currentThread();
 
         Message pkt = new Message();
@@ -216,33 +203,6 @@ public class DepartureAirportStub
         clientCom.close();
     }
 
-    /* TODO : Possivelmente nao sera necessario este metodo aqui */
-    /**
-     *  Operation inform that the passenger is showing his documents
-     *
-     *  It is called by the PASSENGER when he need to show his documents to the hostess
-     *
-     */
-     /*public void showDocuments() {
-         ClientCom clientCom = Communication();
-
-        Passenger passenger = (Passenger) Thread.currentThread();
-        System.out.println("Sending: PASSENGER "+ passenger.getpId() +": Show documents");
-
-        Message pkt = new Message();
-
-        pkt.setType(MessageType.SHOW_DOCUMENTS);
-        pkt.setId( passenger.getpId() );
-        pkt.setState( passenger.getpState() );
-
-        clientCom.writeObject(pkt);
-
-        pkt = (Message) clientCom.readObject();
-        passenger.setpState( pkt.getState() );
-
-        clientCom.close();
-    }*/
-
 
     /*                                     PILOT                                       */
     /*---------------------------------------------------------------------------------*/
@@ -256,42 +216,37 @@ public class DepartureAirportStub
     public void informPlaneReadyForBoarding() {
         ClientCom clientCom = Communication();
 
-        System.out.println("Sending: PILOT: Plane is ready for boarding");
         Pilot pilot = (Pilot) Thread.currentThread();
 
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.INFORM_PLANE_READY_BOARDING);
-//        pkt.setId( pilot.getId() );
         pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
-        System.out.println("recieved: PILOT: Plane is ready for boarding");
         pilot.setPilotState( pkt.getState() );
 
         clientCom.close();
     }
 
     /**
-     * It's called by the pilot to park the plane at the transfer gate
+     * Operation performed by the pilot to park the plane at the transfer gate
      */
     public void parkAtTransferGate() {
         ClientCom clientCom = Communication();
 
-        System.out.println("Sending: PILOT: Park at transfer gate");
+//        System.out.println("Sending: PILOT: Park at transfer gate");
         Pilot pilot = (Pilot) Thread.currentThread();
 
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.PARK_AT_TRANSFER_GATE);
-//        pkt.setId( pilot.getId() );
         pkt.setState( pilot.getPilotState() );
         clientCom.writeObject(pkt);
-
 
         /* Receive Message */
         pkt = (Message) clientCom.readObject();
@@ -306,13 +261,10 @@ public class DepartureAirportStub
     public void shutdown() {
         ClientCom clientCom = Communication();
 
-        System.out.println("Sending: departure airport: Shutdown");
-
         Message pkt = new Message();
 
         /* Send Message */
         pkt.setType(MessageType.SHUT);
-
         clientCom.writeObject(pkt);
 
         /* Receive Message */
@@ -320,5 +272,4 @@ public class DepartureAirportStub
 
         clientCom.close();
     }
-
 }

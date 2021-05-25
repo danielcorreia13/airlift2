@@ -3,17 +3,43 @@ package Servers.Plane;
 import Common.Message;
 import static Common.MessageType.*;
 
+/**
+ *  Interface to the Plane.
+ *
+ *    It is responsible to validate and process the incoming message, execute the corresponding method on the
+ *    Destination Airport and generate the outgoing message.
+ */
+
 public class PlaneInterface{
+
+    /**
+     *  Reference to the Plane.
+     */
 
     private final Plane plane;
 
-    public PlaneInterface(Plane plane) {
+    /**
+     *  Instantiation of an interface to the Plane.
+     *
+     *    @param plane reference to the barber shop
+     */
+
+    public PlaneInterface(Plane plane)
+    {
         this.plane = plane;
     }
 
-    public Message handleRequest(Message request) {
-        //System.out.println("Received request: " + request.getType());
+    /**
+     *  Processing of the incoming messages.
+     *
+     *  Validation, execution of the corresponding method and generation of the outgoing message.
+     *
+     *    @param request service request
+     *    @return service reply
+     */
 
+    public Message handleRequest(Message request)
+    {
         Message reply = new Message();
         reply.setType(OK);
         PlaneClientProxy proxy = (PlaneClientProxy) Thread.currentThread();
@@ -25,16 +51,14 @@ public class PlaneInterface{
                 plane.informPlaneIsReadyToTakeOff(request.getInt1());
                 break;
             case SET_AT_DESTINATION:
-                System.out.println("DESTINATION_FLAG:" + request.getBool1() );
+//                System.out.println("DESTINATION_FLAG:" + request.getBool1() );
                 plane.setAtDestination(request.getBool1());
                 break;
             case WAIT_END_FLIGHT:
                 plane.waitForEndOfFlight();
                 break;
             case BOARD_THE_PLANE:
-                //System.out.println("Calling board the plane");
                 plane.boardThePlane();
-                //System.out.println("board the plane returned");
                 break;
             case WAIT_FOR_ALL_IN_BOARD:
                 int ret = plane.waitForAllInBoard();
@@ -46,9 +70,6 @@ public class PlaneInterface{
         }
 
         reply.setState(proxy.getEntityState());
-        //System.out.println("Replayed to request: " + request.getType());
         return reply;
-
     }
-
 }

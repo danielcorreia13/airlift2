@@ -6,6 +6,10 @@ import Servers.Common.ServerCom;
 import java.io.EOFException;
 import java.io.IOException;
 
+/**
+ *  Service provider agent for access to the Departure Airport.
+ */
+
 public class DepartureAirportClientProxy extends Thread{
 
     /**
@@ -14,7 +18,15 @@ public class DepartureAirportClientProxy extends Thread{
 
     private static int nProxy = 0;
 
+    /**
+     *  Communication channel.
+     */
+
     private final ServerCom conn;
+
+    /**
+     *  Interface to the Desparture Airport
+     */
 
     private final DepartureAirportInterface departureAirport;
 
@@ -62,6 +74,12 @@ public class DepartureAirportClientProxy extends Thread{
         this.entityState = entityState;
     }
 
+    /**
+     *  Instantiation of a Departure Airport Proxy
+     *
+     *     @param conn communication channel
+     *     @param departureAirport interface to Departure Airport
+     */
 
     public DepartureAirportClientProxy(ServerCom conn, DepartureAirportInterface departureAirport) {
         super ("DepartureAirport_" + DepartureAirportClientProxy.getProxyId ());
@@ -69,15 +87,17 @@ public class DepartureAirportClientProxy extends Thread{
         this.departureAirport= departureAirport;
     }
 
+    /**
+     *  Life cycle of the service provider agent.
+     */
+
     @Override
-    public void run() {
-
-            Message msg = (Message) conn.readObject();
-            if (msg == null) return;
-            Message send = departureAirport.handleRequest(msg);
-            conn.writeObject(send);
-
-
+    public void run()
+    {
+        Message msg = (Message) conn.readObject();
+        if (msg == null) return;
+        Message send = departureAirport.handleRequest(msg);
+        conn.writeObject(send);
         conn.close();
     }
 

@@ -16,12 +16,12 @@ public class Hostess extends Thread
 {
 
     /**
-     *  Reference to Departure Airport
+     *  Reference to Departure Airport Stub
      */
     private final DepartureAirportStub depAirStub;
 
     /**
-     *  Reference to Plane
+     *  Reference to Plane Stub
      */
     private final PlaneStub planeStub;
 
@@ -91,7 +91,7 @@ public class Hostess extends Thread
                     break;
                 }
                 count++;
-                System.out.println("Waiting for next passenger");
+//                System.out.println("Waiting for next passenger");
                 depAirStub.waitForNextPassenger();
 
                 depAirStub.checkDocuments();
